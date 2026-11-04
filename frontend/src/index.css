@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 247 248 251; --surface: 255 255 255; --line: 226 230 238; --fg: 24 32 48; --muted: 91 101 117;
+  --brand: 79 70 229; --on-brand: 255 255 255; --critical: 185 28 28; --high: 194 65 12; --medium: 161 98 7; --low: 29 111 165; --ok: 21 128 61;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: 14 18 26; --surface: 22 28 40; --line: 40 49 66; --fg: 230 234 241; --muted: 151 161 178;
+    --brand: 129 140 248; --on-brand: 14 18 26; --critical: 248 113 113; --high: 251 146 60; --medium: 250 204 21; --low: 96 165 250; --ok: 74 222 128;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: 14 18 26; --surface: 22 28 40; --line: 40 49 66; --fg: 230 234 241; --muted: 151 161 178;
+  --brand: 129 140 248; --on-brand: 14 18 26; --critical: 248 113 113; --high: 251 146 60; --medium: 250 204 21; --low: 96 165 250; --ok: 74 222 128;
+}
+html { color-scheme: light dark; }
+body { @apply bg-bg text-fg font-sans antialiased; margin: 0; }
+:focus-visible { outline: 2px solid rgb(var(--brand)); outline-offset: 2px; border-radius: 6px; }
+.card { @apply bg-surface border border-line rounded-xl; }
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium border border-line bg-surface hover:bg-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed; }
+.btn-primary { @apply border-transparent bg-brand hover:opacity-90; color: rgb(var(--on-brand)); }
+.input { @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm; }
+.react-flow__attribution { display: none; }
+.react-flow { --xy-background-color-default: transparent; }

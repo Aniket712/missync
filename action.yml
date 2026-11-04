@@ -1,0 +1,68 @@
+name: Missync analyze
+description: Analyze a SQL change or migration folder before it merges, and fail the check on risky findings.
+author: Missync
+branding:
+  icon: shield
+  color: purple
+
+inputs:
+  sql:
+    description: Path to a .sql file or a folder of .sql migrations (applied in filename order).
+    required: true
+  sqlite:
+    description: Path to a SQLite database file to analyze against.
+    required: false
+  postgres-url:
+    description: PostgreSQL URL of a read-only user (store it as a secret). Used when `sqlite` is empty.
+    required: false
+  dialect:
+    description: SQL dialect of the change (default is the database's dialect).
+    required: false
+  fail-on:
+    description: Fail when a finding is at least this severe (critical, high, medium, low, never).
+    required: false
+    default: high
+  report-name:
+    description: Name of the uploaded HTML report artifact.
+    required: false
+    default: missync-report
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install Missync
+      shell: bash
+      run: pip install "${{ github.action_path }}/backend[postgres]"
+    - name: Analyze
+      id: run
+      shell: bash
+      env:
+        IN_SQL: ${{ inputs.sql }}
+        IN_SQLITE: ${{ inputs.sqlite }}
+        IN_DIALECT: ${{ inputs.dialect }}
+        IN_FAIL_ON: ${{ inputs.fail-on }}
+        MISSYNC_POSTGRES_URL: ${{ inputs.postgres-url }}
+      run: |
+        set +e
+        args=(analyze --fail-on "$IN_FAIL_ON" --format html --output missync-report.html)
+        if [ -d "$IN_SQL" ]; then args+=(--dir "$IN_SQL"); else args+=(--sql "$IN_SQL"); fi
+        if [ -n "$IN_SQLITE" ]; then args+=(--sqlite "$IN_SQLITE"); fi
+        if [ -n "$IN_DIALECT" ]; then args+=(--dialect "$IN_DIALECT"); fi
+        missync "${args[@]}" | tee missync-summary.txt
+        code=${PIPESTATUS[0]}
+        { echo '### Missync analysis'; echo '```'; cat missync-summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ${{ inputs.report-name }}
+        path: missync-report.html
+        if-no-files-found: ignore
+    - name: Fail on findings
+      shell: bash
+      env:
+        CODE: ${{ steps.run.outputs.exit-code }}
+      run: exit "${CODE:-2}"

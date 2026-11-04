@@ -1,0 +1,27 @@
+.venv/
+data/
+data_try/
+backend/data_try/
+node_modules/
+frontend/dist/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.log
+.env
+shots/
+data_pg/
+data_chk/
+data*/
+!backend/missync/demo/
+*.egg-info/
+.secret_key
+backend/missync/_static/
+dist/
+build/
+coverage/
+.coverage
+pdfprev/
+
+# Local-only handbook PDFs (regenerate with frontend/make-handbook.mjs)
+docs/*.pdf

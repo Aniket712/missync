@@ -1,0 +1,12 @@
+node_modules
+frontend/node_modules
+frontend/dist
+.venv
+data
+data_pg
+data_chk
+*.log
+backend/missync/_static
+shots
+__pycache__
+.git

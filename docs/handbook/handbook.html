@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Missync Handbook</title>
+<style>
+@page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+:root{--ink:#182030;--muted:#5b6575;--line:#dfe3ec;--soft:#f4f6fb;--brand:#4f46e5;--brand2:#eef0ff;--ok:#15803d;--okbg:#e8f6ee;--crit:#b91c1c;--critbg:#fdecec;--high:#c2410c;--highbg:#fdf0e7;--med:#a16207;--medbg:#fbf3dc;--low:#1d6fa5;--lowbg:#e6f1f9}
+*{box-sizing:border-box}
+body{font:10.4pt/1.55 "Segoe UI",Inter,Arial,sans-serif;color:var(--ink);margin:0}
+h1{font-size:23pt;margin:0 0 6pt;letter-spacing:-.3pt;color:var(--ink)}
+h2{font-size:15pt;margin:20pt 0 6pt;padding-bottom:4pt;border-bottom:2px solid var(--brand);color:var(--ink);break-after:avoid}
+h3{font-size:11.6pt;margin:14pt 0 4pt;break-after:avoid;color:var(--brand);break-after:avoid}
+h4{font-size:10.4pt;margin:10pt 0 2pt;break-after:avoid}
+p{margin:0 0 7pt}
+ul,ol{margin:0 0 8pt;padding-left:18pt}li{margin-bottom:2.5pt}
+code{font:9pt Consolas,"Cascadia Mono",monospace;background:var(--soft);padding:0 3pt;border-radius:3pt}
+pre{font:8.4pt/1.4 Consolas,"Cascadia Mono",monospace;background:#0f1724;color:#e6eaf1;padding:8pt 10pt;border-radius:6pt;white-space:pre-wrap;margin:6pt 0 10pt;break-inside:avoid}
+table{border-collapse:collapse;width:100%;margin:6pt 0 10pt;font-size:9.2pt;break-inside:auto}
+th{background:var(--brand);color:#fff;text-align:left;padding:4pt 6pt;font-weight:600}
+td{border-bottom:1px solid var(--line);padding:4pt 6pt;vertical-align:top}
+tr{break-inside:avoid}
+tr:nth-child(even) td{background:#fafbfe}
+.chapter{break-before:page}
+.cover{height:255mm;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(160deg,#4f46e5 0%,#312e81 100%);color:#fff;margin:-18mm -16mm 0;padding:0 22mm;break-after:page;height:297mm}
+.cover h1{color:#fff;font-size:44pt;margin-bottom:4pt}
+.cover .tag{font-size:15pt;opacity:.92;margin-bottom:34pt}
+.cover .sub{font-size:11pt;opacity:.85;max-width:140mm}
+.cover .meta{position:absolute;bottom:22mm;font-size:9.5pt;opacity:.8}
+.toc li{margin-bottom:5pt}
+.callout{border-left:4px solid var(--brand);background:var(--brand2);padding:7pt 10pt;border-radius:0 6pt 6pt 0;margin:8pt 0 10pt;break-inside:avoid}
+.callout.ok{border-color:var(--ok);background:var(--okbg)}
+.callout.warn{border-color:var(--med);background:var(--medbg)}
+.callout.bad{border-color:var(--crit);background:var(--critbg)}
+.callout b.t{display:block;margin-bottom:2pt}
+.fig{margin:8pt 0 12pt;break-inside:avoid;text-align:center}
+.fig svg{width:100%;height:auto}
+.fig figcaption,.shot figcaption{font-size:8.6pt;color:var(--muted);margin-top:3pt;text-align:center}
+.shot{margin:8pt 0 12pt;break-inside:avoid}
+.shot img{width:100%;border:1px solid var(--line);border-radius:6pt;display:block}
+.crop{overflow:hidden;border:1px solid var(--line);border-radius:6pt}
+.crop img{border:0;border-radius:0;display:block;width:100%}
+.two{display:flex;gap:12pt;align-items:flex-start}.two>*{flex:1}
+.pill{display:inline-block;padding:0 6pt;border-radius:9pt;font-size:8pt;font-weight:600;border:1px solid}
+.p-ok{color:var(--ok);background:var(--okbg);border-color:var(--ok)}
+.p-crit{color:var(--crit);background:var(--critbg);border-color:var(--crit)}
+.p-high{color:var(--high);background:var(--highbg);border-color:var(--high)}
+.p-med{color:var(--med);background:var(--medbg);border-color:var(--med)}
+.p-low{color:var(--low);background:var(--lowbg);border-color:var(--low)}
+.p-no{color:var(--muted);background:var(--soft);border-color:var(--line)}
+.kpi{display:flex;gap:8pt;margin:8pt 0 12pt}.kpi div{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:8pt;padding:7pt;text-align:center}.kpi b{display:block;font-size:17pt;color:var(--brand)}.kpi span{font-size:8.4pt;color:var(--muted)}
+.small{font-size:8.8pt;color:var(--muted)}
+.card{border:1px solid var(--line);border-radius:8pt;padding:8pt 10pt;margin-bottom:8pt;break-inside:avoid;background:#fff}
+/* svg text styles */
+svg text{font-family:"Segoe UI",Inter,Arial,sans-serif;fill:#182030}
+svg .s{font-size:11px}svg .m{font-size:12.5px}svg .l{font-size:14px;font-weight:700}svg .w{fill:#fff}svg .mu{fill:#5b6575}svg .b{font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- =============================== COVER =============================== -->
+<section class="cover">
+  <svg width="64" height="64" viewBox="0 0 32 32" style="margin-bottom:18pt"><rect width="32" height="32" rx="8" fill="#fff"/><path d="M8 22V10l8 8 8-8v12" stroke="#4f46e5" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <h1>Missync</h1>
+  <div class="tag">Catch data changes before they break what depends on them.</div>
+  <div class="sub">The project handbook: the problem, the market, the architecture, how the tool was built step by step, how to run and extend it, and what has — and has not — been verified.</div>
+  <div class="meta">Data Change Intelligence &middot; Open-source &middot; FastAPI + React + SQLGlot + DuckDB<br>Handbook edition of 23 October 2026 &middot; revised for the public-release update</div>
+</section>
+
+<!-- =============================== CONTENTS =============================== -->
+<h1>Contents</h1>
+<ol class="toc">
+  <li><b>The problem</b> — why a harmless-looking SQL change breaks things</li>
+  <li><b>The solution at a glance</b> — what Missync does, in one page</li>
+  <li><b>The landscape</b> — existing tools, competitors, and how Missync differs</li>
+  <li><b>Architecture</b> — layers, pipeline, sandbox, data model</li>
+  <li><b>Technology choices</b> — what was used and why</li>
+  <li><b>How it was built, step by step</b> — including the bugs hit on the way</li>
+  <li><b>The analysis engine in depth</b> — diffing, lineage, severity, reconciliation, evidence</li>
+  <li><b>Tour of the product</b> — screenshots of every screen, four worked scenarios</li>
+  <li><b>Security model</b></li>
+  <li><b>Connectors and capability matrix</b></li>
+  <li><b>Testing and verification</b> — what is proven, what is not</li>
+  <li><b>Running, configuring and extending</b> — including the command line, CI and deployment</li>
+  <li><b>Limitations and roadmap</b></li>
+  <li><b>Glossary and sources</b></li>
+</ol>
+<div class="callout"><b class="t">How to read this handbook</b>
+New to the project? Read chapters 1–3, then the tour (8). Want to modify the code? Read 4–7 and 12. Evaluating it for your team? Read 3, 9, 10, 11 and 13 — they are deliberately candid about limits.</div>
+<div class="kpi">
+  <div><b>~5,100</b><span>lines of Python + TypeScript</span></div>
+  <div><b>103</b><span>automated tests (95 backend + 3 live&nbsp;Postgres + 5 frontend)</span></div>
+  <div><b>6</b><span>connector types</span></div>
+  <div><b>3</b><span>ways to run it: script, <code>pip</code>, container</span></div>
+</div>
+
+<!-- =============================== 1 PROBLEM =============================== -->
+<h2 class="chapter" style="break-before:page">1&nbsp;&nbsp;The problem</h2>
+<p>Data platforms are webs of dependencies. A table feeds a view; the view feeds a dashboard; the dashboard feeds a weekly finance report; a machine-learning job reads the same view. Most of these links are <b>implicit</b>: nobody wrote them down, and the database does not enforce them. When an engineer changes the table, nothing tells them what is downstream.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 250" role="img" aria-label="A change to one column ripples into views, dashboards and models">
+  <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa3b5"/></marker></defs>
+  <rect x="10" y="95" width="150" height="62" rx="10" fill="#fdf0e7" stroke="#c2410c" stroke-width="2"/>
+  <text x="85" y="122" class="m b" text-anchor="middle">orders.amount</text><text x="85" y="141" class="s mu" text-anchor="middle">DECIMAL(10,2) → INTEGER</text>
+  <g stroke="#9aa3b5" stroke-width="1.6" fill="none" marker-end="url(#a1)">
+    <path d="M160 115 C 200 80, 220 60, 260 60"/><path d="M160 126 L 260 126"/><path d="M160 140 C 200 175, 220 195, 260 195"/></g>
+  <g fill="#fbf3dc" stroke="#a16207" stroke-width="1.6">
+    <rect x="262" y="35" width="150" height="50" rx="9"/><rect x="262" y="101" width="150" height="50" rx="9"/><rect x="262" y="170" width="150" height="50" rx="9"/></g>
+  <text x="337" y="58" class="m b" text-anchor="middle">v_daily_revenue</text><text x="337" y="75" class="s mu" text-anchor="middle">view</text>
+  <text x="337" y="124" class="m b" text-anchor="middle">v_customer_ltv</text><text x="337" y="141" class="s mu" text-anchor="middle">view</text>
+  <text x="337" y="193" class="m b" text-anchor="middle">Finance export</text><text x="337" y="210" class="s mu" text-anchor="middle">reads orders directly</text>
+  <g stroke="#9aa3b5" stroke-width="1.6" fill="none" marker-end="url(#a1)"><path d="M412 60 L 505 60"/><path d="M412 126 L 505 126"/><path d="M412 195 L 505 195"/></g>
+  <g fill="#fdecec" stroke="#b91c1c" stroke-width="1.6"><rect x="507" y="35" width="150" height="50" rx="9"/><rect x="507" y="101" width="150" height="50" rx="9"/><rect x="507" y="170" width="150" height="50" rx="9"/></g>
+  <text x="582" y="58" class="m b" text-anchor="middle">Revenue dashboard</text><text x="582" y="75" class="s mu" text-anchor="middle">numbers shift quietly</text>
+  <text x="582" y="124" class="m b" text-anchor="middle">Churn model</text><text x="582" y="141" class="s mu" text-anchor="middle">features change</text>
+  <text x="582" y="193" class="m b" text-anchor="middle">Monthly report</text><text x="582" y="210" class="s mu" text-anchor="middle">cents rounded away</text>
+  <text x="85" y="80" class="s b" fill="#c2410c" style="fill:#c2410c" text-anchor="middle">1 line of SQL</text>
+  <text x="700" y="128" class="l" style="fill:#b91c1c">?</text><text x="700" y="145" class="s mu">who is told?</text>
+</svg>
+<figcaption>Figure 1 — The ripple effect. One migration reaches objects its author never looked at.</figcaption></figure>
+
+<h3>The four failure modes this project targets</h3>
+<table>
+<tr><th style="width:24%">Failure mode</th><th>What happens</th><th style="width:28%">Typical cause</th></tr>
+<tr><td><b>Structural break</b></td><td>A column or table disappears or changes type; a downstream view, query or job errors out — or worse, silently casts.</td><td>DROP / RENAME / ALTER TYPE</td></tr>
+<tr><td><b>Missing records</b></td><td>The schema is fine but rows vanish: a join becomes inner, a filter is too broad, a cleanup deletes real customers.</td><td>DELETE, join/filter changes</td></tr>
+<tr><td><b>Metric drift</b></td><td>Nothing fails. The headline number simply moves (here +7%) because a definition changed.</td><td>Redefined views, status filters</td></tr>
+<tr><td><b>Data-quality regression</b></td><td>NULL rates jump, keys duplicate, values change — the pipeline is "green" but the data is worse.</td><td>Backfills, lookups with partial coverage</td></tr>
+</table>
+
+<div class="callout warn"><b class="t">Why this is hard</b>
+(1) Reviewers read a diff of SQL, not a diff of <i>consequences</i>. (2) Tests that exist check what someone thought of in advance. (3) Staging copies are expensive, stale, or missing. (4) Lineage is scattered across view definitions, BI tools and people's heads. The result: breaking changes are found by the people who consume the data, after deployment.</div>
+
+<h3>What a good answer must do</h3>
+<ul>
+<li><b>Predict</b> what a change will touch before it runs (static analysis).</li>
+<li><b>Measure</b> what it actually does — without risking production.</li>
+<li><b>Separate</b> measurements from guesses, and say how sure it is.</li>
+<li><b>Not cry wolf</b>: a difference is not automatically a defect (a deliberate DELETE <i>should</i> remove rows).</li>
+<li><b>Admit gaps</b>: unknown consumers, unreadable view definitions, sampled data.</li>
+</ul>
+
+<!-- =============================== 2 SOLUTION =============================== -->
+<h2>2&nbsp;&nbsp;The solution at a glance</h2>
+<p>Missync is a web application that takes a <b>proposed SQL change</b>, analyses it statically, applies it to a <b>disposable copy</b> of the data, compares before and after, traces what depends on the changed objects, and produces an <b>evidence-based report</b>. The source database is only ever read.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 330" role="img" aria-label="Seven-step workflow">
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4f46e5"/></marker></defs>
+  <g class="step">
+  <rect x="10" y="20" width="170" height="86" rx="12" fill="#eef0ff" stroke="#4f46e5" stroke-width="1.8"/><circle cx="32" cy="42" r="12" fill="#4f46e5"/><text x="32" y="46.5" class="s w b" text-anchor="middle">1</text>
+  <text x="50" y="46" class="m b">Connect (read-only)</text><text x="22" y="68" class="s mu">SQLite · DuckDB · Postgres</text><text x="22" y="83" class="s mu">BigQuery · Snowflake · files</text>
+  <rect x="195" y="20" width="170" height="86" rx="12" fill="#eef0ff" stroke="#4f46e5" stroke-width="1.8"/><circle cx="217" cy="42" r="12" fill="#4f46e5"/><text x="217" y="46.5" class="s w b" text-anchor="middle">2</text>
+  <text x="235" y="46" class="m b">Discover</text><text x="207" y="68" class="s mu">tables, columns, views,</text><text x="207" y="83" class="s mu">view SQL → dependencies</text>
+  <rect x="380" y="20" width="170" height="86" rx="12" fill="#eef0ff" stroke="#4f46e5" stroke-width="1.8"/><circle cx="402" cy="42" r="12" fill="#4f46e5"/><text x="402" y="46.5" class="s w b" text-anchor="middle">3</text>
+  <text x="420" y="46" class="m b">Submit SQL</text><text x="392" y="68" class="s mu">migration or transformation,</text><text x="392" y="83" class="s mu">metrics + keys (optional)</text>
+  <rect x="565" y="20" width="185" height="86" rx="12" fill="#eef0ff" stroke="#4f46e5" stroke-width="1.8"/><circle cx="587" cy="42" r="12" fill="#4f46e5"/><text x="587" y="46.5" class="s w b" text-anchor="middle">4</text>
+  <text x="605" y="46" class="m b">Static analysis</text><text x="577" y="68" class="s mu">drops, type changes, no-WHERE,</text><text x="577" y="83" class="s mu">impacted views &amp; assets</text>
+  <rect x="10" y="195" width="170" height="100" rx="12" fill="#e8f6ee" stroke="#15803d" stroke-width="1.8"/><circle cx="32" cy="217" r="12" fill="#15803d"/><text x="32" y="221.5" class="s w b" text-anchor="middle">5</text>
+  <text x="50" y="221" class="m b">Sandbox run</text><text x="22" y="243" class="s mu">copy sample → DuckDB,</text><text x="22" y="258" class="s mu">apply SQL to the copy only</text><text x="22" y="273" class="s mu">(source never written)</text>
+  <rect x="195" y="195" width="170" height="100" rx="12" fill="#e8f6ee" stroke="#15803d" stroke-width="1.8"/><circle cx="217" cy="217" r="12" fill="#15803d"/><text x="217" y="221.5" class="s w b" text-anchor="middle">6</text>
+  <text x="235" y="221" class="m b">Compare</text><text x="207" y="243" class="s mu">row counts, NULL rates,</text><text x="207" y="258" class="s mu">duplicate keys, aggregates,</text><text x="207" y="273" class="s mu">record-by-record on keys</text>
+  <rect x="380" y="195" width="370" height="100" rx="12" fill="#fff" stroke="#15803d" stroke-width="1.8"/><circle cx="402" cy="217" r="12" fill="#15803d"/><text x="402" y="221.5" class="s w b" text-anchor="middle">7</text>
+  <text x="420" y="221" class="m b">Evidence-based report</text>
+  <rect x="394" y="236" width="94" height="22" rx="11" fill="#fdecec" stroke="#b91c1c"/><text x="441" y="251" class="s b" text-anchor="middle" style="fill:#b91c1c">Critical</text>
+  <rect x="494" y="236" width="70" height="22" rx="11" fill="#fdf0e7" stroke="#c2410c"/><text x="529" y="251" class="s b" text-anchor="middle" style="fill:#c2410c">High</text>
+  <rect x="570" y="236" width="92" height="22" rx="11" fill="#e8f6ee" stroke="#15803d"/><text x="616" y="251" class="s b" text-anchor="middle" style="fill:#15803d">Verified</text>
+  <rect x="668" y="236" width="72" height="22" rx="11" fill="#f4f6fb" stroke="#dfe3ec"/><text x="704" y="251" class="s b" text-anchor="middle" class="mu">Predicted</text>
+  <text x="394" y="278" class="s mu">risks · affected assets · confidence · limitations · next actions · JSON + HTML</text>
+  </g>
+  <g stroke="#4f46e5" stroke-width="2" fill="none" marker-end="url(#a2)"><path d="M180 63 H193"/><path d="M365 63 H378"/><path d="M550 63 H563"/><path d="M657 106 V150 H95 V193"/><path d="M180 245 H193"/><path d="M365 245 H378"/></g>
+</svg>
+<figcaption>Figure 2 — The seven-step workflow. Steps 1–4 are read-only/static; steps 5–6 happen only inside a throw-away sandbox.</figcaption></figure>
+
+<h3>Design principles (the "personality" of the tool)</h3>
+<table>
+<tr><th style="width:27%">Principle</th><th>How it shows up in the product</th></tr>
+<tr><td><b>Never touch production</b></td><td>Read-only connectors; candidate SQL runs only in an in-memory DuckDB with file/network access disabled.</td></tr>
+<tr><td><b>Predicted ≠ verified</b></td><td>Every finding carries a badge: <span class="pill p-ok">Verified in sandbox</span> or <span class="pill p-no">Predicted</span>.</td></tr>
+<tr><td><b>Evidence over scores</b></td><td>Severity is rule-based (Critical…Info) with the measured numbers attached; there is no opaque "risk score 73".</td></tr>
+<tr><td><b>A difference is not a defect</b></td><td>A <span class="pill p-low">May be intended</span> tag when the statement plausibly explains the change (e.g. a filtered DELETE).</td></tr>
+<tr><td><b>Honest about gaps</b></td><td>"Lineage incomplete", "sampled to N rows", "not validated — static only" appear in the UI and the reports.</td></tr>
+<tr><td><b>Lightweight</b></td><td>One Python process + SQLite metadata store + static UI. No agents, no catalog, no warehouse write access.</td></tr>
+</table>
+
+<!-- =============================== 3 LANDSCAPE =============================== -->
+<h2 class="chapter">3&nbsp;&nbsp;The landscape: existing solutions and competitors</h2>
+<p>Several mature tools touch parts of this problem. None of them is "wrong" — they are built for different moments in the data lifecycle. The research below was done on the public web (sources in chapter 14); vendor claims are labelled as such.</p>
+
+<h3>3.1&nbsp; Competitor list (brief)</h3>
+<table>
+<tr><th style="width:17%">Tool</th><th style="width:20%">Category</th><th>What it does</th><th style="width:25%">Typical limits for this use case</th></tr>
+<tr><td><b>Datafold</b> / <code>data-diff</code></td><td>Data diff (OSS CLI + paid cloud)</td><td>Row-level comparison of two tables (same-DB "joindiff", cross-DB "hashdiff" checksums); cloud adds CI checks, column-level lineage with BI integrations and diff history.</td><td>You must <i>build</i> the new dataset first; compares data, does not analyse the SQL text. Best features are in the paid cloud.</td></tr>
+<tr><td><b>Recce</b></td><td>dbt PR validation (OSS + cloud)</td><td>Checks that compare two dbt environments (dev vs prod), query diff, row-level diff, PR impact summary comment.</td><td>Designed around dbt projects; merge-blocking is a cloud feature.</td></tr>
+<tr><td><b>SQLMesh</b> (Tobiko)</td><td>Transformation framework</td><td>AST-level classification of a model change as breaking / non-breaking; virtual data environments; <code>table_diff</code> between environments.</td><td>You adopt the framework and its model layout; it is not a drop-in for arbitrary SQL on an existing database.</td></tr>
+<tr><td><b>DataHub</b>, <b>Atlan</b>, Marquez / OpenLineage</td><td>Catalog &amp; lineage platforms</td><td>Upstream/downstream impact analysis across datasets, dashboards, jobs; column-level lineage; ownership to know whom to notify (DataHub vendor page claims 80+ connectors — unverified).</td><td>Heavy to deploy and operate; lineage is only as good as ingestion; they show <i>what is connected</i>, not what <i>your data</i> does after a change.</td></tr>
+<tr><td><b>Monte Carlo</b></td><td>Commercial observability</td><td>Continuous monitoring, ML anomaly detection, lineage inferred from query logs.</td><td>Detects problems <i>after</i> they reach production; enterprise-priced (blog estimates exist; treat as unverified).</td></tr>
+<tr><td><b>Great Expectations</b>, <b>Soda</b> (Core OSS)</td><td>Data-quality testing</td><td>Rules ("expectations" / SodaCL checks) that run in pipelines or CI.</td><td>Catches only what someone wrote a test for; no impact map, no before/after of a proposed change.</td></tr>
+<tr><td><b>Bytebase</b></td><td>Database DevOps (OSS + paid)</td><td>SQL review rules (naming, indexes, risky operations), approval flow, GitOps triggers.</td><td>Reviews SQL against rules; does not measure data effects or trace BI/ML consumers.</td></tr>
+<tr><td><b>Liquibase</b>, <b>Flyway</b></td><td>Migration runners <span class="small">(general knowledge)</span></td><td>Version and apply schema migrations reliably.</td><td>Apply changes — they do not predict or measure impact.</td></tr>
+<tr><td><b>datacontract CLI</b>, Tessera, Schema Guard</td><td>Contracts / schema gates</td><td>Compare contract or schema versions to detect breaking changes; Tessera blocks a column drop until consumers acknowledge; Schema Guard snapshots a schema as a CI gate.</td><td>Structural only: nothing about row loss, NULL spikes or metric drift.</td></tr>
+</table>
+
+<h3>3.2&nbsp; Where Missync sits</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 360" role="img" aria-label="Positioning map: depth of evidence versus weight of adoption">
+  <rect x="60" y="20" width="680" height="300" fill="#fafbfe" stroke="#dfe3ec"/>
+  <line x1="400" y1="20" x2="400" y2="320" stroke="#dfe3ec" stroke-dasharray="4 4"/><line x1="60" y1="170" x2="740" y2="170" stroke="#dfe3ec" stroke-dasharray="4 4"/>
+  <text x="400" y="345" class="m b" text-anchor="middle">Weight of adoption  →  heavier (framework, platform, cloud account)</text>
+  <text x="20" y="170" class="m b" text-anchor="middle" transform="rotate(-90 20 170)">Evidence about THIS change  →  deeper</text>
+  <text x="70" y="38" class="s mu">light + deep</text><text x="410" y="38" class="s mu">heavy + deep</text><text x="70" y="312" class="s mu">light + shallow</text><text x="410" y="312" class="s mu">heavy + shallow</text>
+  <g>
+   <circle cx="185" cy="70" r="30" fill="#4f46e5"/><text x="185" y="74" class="m b w" text-anchor="middle">Missync</text>
+   <circle cx="470" cy="85" r="24" fill="#c7cbe8"/><text x="470" y="89" class="s b" text-anchor="middle">Datafold</text>
+   <circle cx="360" cy="105" r="21" fill="#c7cbe8"/><text x="360" y="109" class="s b" text-anchor="middle">Recce</text>
+   <circle cx="580" cy="130" r="25" fill="#c7cbe8"/><text x="580" y="134" class="s b" text-anchor="middle">SQLMesh</text>
+   <circle cx="560" cy="230" r="26" fill="#e3e6f2"/><text x="560" y="234" class="s b" text-anchor="middle">DataHub</text>
+   <circle cx="650" cy="260" r="22" fill="#e3e6f2"/><text x="650" y="264" class="s b" text-anchor="middle">Atlan</text>
+   <circle cx="620" cy="195" r="27" fill="#e3e6f2"/><text x="620" y="199" class="s b" text-anchor="middle">Monte Carlo</text>
+   <circle cx="260" cy="215" r="24" fill="#e3e6f2"/><text x="260" y="219" class="s b" text-anchor="middle">Great Exp.</text>
+   <circle cx="165" cy="250" r="20" fill="#e3e6f2"/><text x="165" y="254" class="s b" text-anchor="middle">Soda</text>
+   <circle cx="335" cy="262" r="23" fill="#e3e6f2"/><text x="335" y="266" class="s b" text-anchor="middle">Bytebase</text>
+   <circle cx="130" cy="195" r="21" fill="#e3e6f2"/><text x="130" y="199" class="s b" text-anchor="middle">Schema Guard</text>
+  </g>
+</svg>
+<figcaption>Figure 3 — Indicative positioning (the author's judgement, not a benchmark). Missync aims at the "light + deep" corner: deep evidence about one proposed change, with a minimal footprint.</figcaption></figure>
+
+<h3>3.3&nbsp; How Missync differs</h3>
+<table>
+<tr><th style="width:26%">Dimension</th><th>Typical alternative</th><th>Missync</th></tr>
+<tr><td>Moment of use</td><td>After deploy (observability) or in a framework-bound CI step (dbt/SQLMesh)</td><td><b>Before</b> deploy, for <b>any</b> pasted SQL against an existing database</td></tr>
+<tr><td>Input</td><td>A built dev dataset, a dbt project or a contract file</td><td>Just the SQL text (+ optional metrics / keys)</td></tr>
+<tr><td>Impact</td><td>Needs a catalog ingesting metadata, or query logs</td><td>Parses the view SQL it can read; user-registered assets; <b>marks what it could not see</b></td></tr>
+<tr><td>Data effects</td><td>Separate tool, or a staging copy you maintain</td><td>Built-in disposable sandbox with before/after profiling and key-based reconciliation</td></tr>
+<tr><td>Trustworthiness</td><td>Scores / alerts</td><td>Predicted vs verified labels, confidence + reason, limitations, "may be intended"</td></tr>
+<tr><td>Warehouse privileges</td><td>Often needs write access for dev schemas</td><td>Read-only everywhere; sandbox is local</td></tr>
+</table>
+
+<h3>3.4&nbsp; Why it is lighter and (in this niche) better</h3>
+<ul>
+<li><b>One process, one container.</b> FastAPI serves the API and the built UI; metadata lives in a small SQLite file. No Kafka, no crawler fleet, no graph database.</li>
+<li><b>No write access, no staging warehouse.</b> The sandbox is in-memory DuckDB, so it needs no cloud spend, no cloning permissions and leaves nothing behind.</li>
+<li><b>No framework adoption.</b> Works with a pasted <code>ALTER TABLE</code> as readily as with a view rewrite.</li>
+<li><b>Honest output.</b> It refuses to claim safety ("not a guarantee"), refuses unreliable comparisons (non-unique keys) and shows where lineage is incomplete.</li>
+<li><b>Same engine everywhere.</b> The public demo and the self-hosted app run the identical analysis code — the demo is not a mock.</li>
+<li><b>Hackable.</b> ~5k lines; a connector is ~100 lines; rules live in one readable file (<code>severity.py</code>).</li>
+</ul>
+<div class="callout warn"><b class="t">Where the others are genuinely better (be fair)</b>
+Datafold and SQLMesh scale to very large tables and have mature CI/merge-blocking; DataHub/Atlan cover enterprise lineage across hundreds of sources and BI tools; Monte Carlo watches production continuously, which Missync does not do at all. Missync is a <i>pre-change inspector</i>, not a catalog or an observability platform — it complements them.</div>
+
+<!-- =============================== 4 ARCHITECTURE =============================== -->
+<h2 class="chapter">4&nbsp;&nbsp;Architecture</h2>
+<h3>4.1&nbsp; System layers</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 420" role="img" aria-label="System layer diagram">
+  <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6575"/></marker></defs>
+  <rect x="10" y="10" width="740" height="62" rx="10" fill="#eef0ff" stroke="#4f46e5" stroke-width="1.6"/>
+  <text x="24" y="32" class="m b">Browser · React 18 + TypeScript + Vite + Tailwind</text>
+  <text x="24" y="52" class="s mu">Overview · Connections &amp; schema · Analyze (CodeMirror, live progress) · Results (tabs, React Flow graph) · Baselines · History</text>
+  <path d="M380 72 V92" stroke="#5b6575" stroke-width="1.8" marker-end="url(#a3)"/><text x="392" y="86" class="s mu">JSON over HTTP  /api/*</text>
+  <rect x="10" y="94" width="740" height="214" rx="10" fill="#fff" stroke="#182030" stroke-width="1.6"/>
+  <text x="24" y="114" class="m b">FastAPI service (Python 3.11+) — one process</text>
+  <rect x="24" y="124" width="170" height="70" rx="8" fill="#f4f6fb" stroke="#c9cfdd"/><text x="109" y="144" class="m b" text-anchor="middle">api/</text><text x="109" y="161" class="s mu" text-anchor="middle">routes, token + mode guard,</text><text x="109" y="175" class="s mu" text-anchor="middle">background jobs, static UI</text>
+  <rect x="206" y="124" width="330" height="170" rx="8" fill="#e8f6ee" stroke="#15803d"/><text x="371" y="144" class="m b" text-anchor="middle">analysis/ — the engine</text>
+  <g class="s">
+   <rect x="218" y="154" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="292" y="171" text-anchor="middle">sql_parser (SQLGlot)</text>
+   <rect x="376" y="154" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="450" y="171" text-anchor="middle">lineage (graph)</text>
+   <rect x="218" y="186" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="292" y="203" text-anchor="middle">sandbox (DuckDB)</text>
+   <rect x="376" y="186" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="450" y="203" text-anchor="middle">schema_diff</text>
+   <rect x="218" y="218" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="292" y="235" text-anchor="middle">profiling</text>
+   <rect x="376" y="218" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="450" y="235" text-anchor="middle">reconcile</text>
+   <rect x="218" y="250" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="292" y="267" text-anchor="middle">severity (rules)</text>
+   <rect x="376" y="250" width="148" height="26" rx="5" fill="#fff" stroke="#9fd2b3"/><text x="450" y="267" text-anchor="middle">engine · baselines</text>
+  </g>
+  <rect x="548" y="124" width="190" height="70" rx="8" fill="#f4f6fb" stroke="#c9cfdd"/><text x="643" y="144" class="m b" text-anchor="middle">reports/</text><text x="643" y="161" class="s mu" text-anchor="middle">JSON + HTML (Jinja2,</text><text x="643" y="175" class="s mu" text-anchor="middle">autoescaped, CSP header)</text>
+  <rect x="548" y="204" width="190" height="90" rx="8" fill="#f4f6fb" stroke="#c9cfdd"/><text x="643" y="224" class="m b" text-anchor="middle">store/ + security.py</text><text x="643" y="241" class="s mu" text-anchor="middle">SQLite metadata (SQLAlchemy)</text><text x="643" y="255" class="s mu" text-anchor="middle">Fernet-encrypted secrets</text><text x="643" y="269" class="s mu" text-anchor="middle">SSRF / path / log redaction</text>
+  <rect x="24" y="204" width="170" height="90" rx="8" fill="#fdf0e7" stroke="#c2410c"/><text x="109" y="224" class="m b" text-anchor="middle">connectors/</text><text x="109" y="241" class="s mu" text-anchor="middle">Connector interface:</text><text x="109" y="255" class="s mu" text-anchor="middle">test · discover ·</text><text x="109" y="269" class="s mu" text-anchor="middle">fetch_rows (bounded)</text>
+  <path d="M109 294 V334" stroke="#5b6575" stroke-width="1.8" marker-end="url(#a3)"/><text x="122" y="320" class="s mu">read-only</text>
+  <g>
+   <rect x="10" y="336" width="116" height="62" rx="8" fill="#fff" stroke="#182030"/><text x="68" y="362" class="m b" text-anchor="middle">PostgreSQL</text><text x="68" y="378" class="s mu" text-anchor="middle">live-tested</text>
+   <rect x="134" y="336" width="116" height="62" rx="8" fill="#fff" stroke="#182030"/><text x="192" y="362" class="m b" text-anchor="middle">SQLite</text><text x="192" y="378" class="s mu" text-anchor="middle">live-tested</text>
+   <rect x="258" y="336" width="116" height="62" rx="8" fill="#fff" stroke="#182030"/><text x="316" y="362" class="m b" text-anchor="middle">DuckDB</text><text x="316" y="378" class="s mu" text-anchor="middle">live-tested</text>
+   <rect x="382" y="336" width="116" height="62" rx="8" fill="#fff" stroke="#182030"/><text x="440" y="362" class="m b" text-anchor="middle">CSV / Parquet</text><text x="440" y="378" class="s mu" text-anchor="middle">live-tested</text>
+   <rect x="506" y="336" width="116" height="62" rx="8" fill="#f4f6fb" stroke="#9aa3b5" stroke-dasharray="4 3"/><text x="564" y="362" class="m b" text-anchor="middle">BigQuery</text><text x="564" y="378" class="s mu" text-anchor="middle">fake-client tests</text>
+   <rect x="630" y="336" width="116" height="62" rx="8" fill="#f4f6fb" stroke="#9aa3b5" stroke-dasharray="4 3"/><text x="688" y="362" class="m b" text-anchor="middle">Snowflake</text><text x="688" y="378" class="s mu" text-anchor="middle">fake-conn tests</text>
+  </g>
+</svg>
+<figcaption>Figure 4 — Layers and packages. Solid boxes were exercised against the real system; dashed boxes only with test doubles.</figcaption></figure>
+
+<h3>4.2&nbsp; The analysis pipeline (sequence)</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 400" role="img" aria-label="Sequence diagram of one analysis">
+  <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#182030"/></marker></defs>
+  <g class="m b" text-anchor="middle">
+   <rect x="20" y="8" width="100" height="30" rx="6" fill="#eef0ff" stroke="#4f46e5"/><text x="70" y="28">UI</text>
+   <rect x="170" y="8" width="110" height="30" rx="6" fill="#f4f6fb" stroke="#9aa3b5"/><text x="225" y="28">API</text>
+   <rect x="330" y="8" width="110" height="30" rx="6" fill="#e8f6ee" stroke="#15803d"/><text x="385" y="28">Engine</text>
+   <rect x="490" y="8" width="110" height="30" rx="6" fill="#fdf0e7" stroke="#c2410c"/><text x="545" y="28">Source DB</text>
+   <rect x="640" y="8" width="110" height="30" rx="6" fill="#e8f6ee" stroke="#15803d"/><text x="695" y="28">Sandbox</text>
+  </g>
+  <g stroke="#c9cfdd" stroke-dasharray="3 3"><line x1="70" y1="40" x2="70" y2="392"/><line x1="225" y1="40" x2="225" y2="392"/><line x1="385" y1="40" x2="385" y2="392"/><line x1="545" y1="40" x2="545" y2="392"/><line x1="695" y1="40" x2="695" y2="392"/></g>
+  <g stroke="#182030" stroke-width="1.5" fill="none" marker-end="url(#a4)">
+   <path d="M70 62 H223"/><path d="M225 84 H383"/><path d="M385 106 H543"/><path d="M543 128 H387" /><path d="M385 154 H385"/>
+   <path d="M385 178 H543"/><path d="M543 200 H387"/><path d="M385 228 H693"/><path d="M385 250 H693"/><path d="M693 272 H387"/><path d="M385 300 H693"/><path d="M693 322 H387"/><path d="M385 350 H227"/><path d="M225 372 H72"/>
+  </g>
+  <g class="s">
+   <text x="80" y="57">POST /analyses (SQL, metrics, keys)</text>
+   <text x="236" y="79">mode guard · size limit</text>
+   <text x="396" y="101">discover() — read-only</text>
+   <text x="480" y="123" text-anchor="end">schema + view SQL</text>
+   <text x="392" y="148" class="b">parse SQL (SQLGlot) → classify, lineage graph</text>
+   <text x="396" y="173">fetch_rows(table, limit)</text>
+   <text x="480" y="195" text-anchor="end">bounded sample</text>
+   <text x="396" y="223">load → schema base + clone to cand</text>
+   <text x="396" y="245">profile base · apply SQL to cand only</text>
+   <text x="480" y="267" text-anchor="end">outcomes</text>
+   <text x="396" y="295">profile cand · diff · reconcile · metrics</text>
+   <text x="480" y="317" text-anchor="end">measurements</text>
+   <text x="392" y="345" class="b">findings + severity + impact graph</text>
+   <text x="236" y="367">store, return AnalysisResult</text>
+  </g>
+</svg>
+<figcaption>Figure 5 — One analysis. The source DB is touched only by the two read-only calls; everything mutating happens in the sandbox.</figcaption></figure>
+
+<h3>4.2a&nbsp; Jobs, progress and limits</h3>
+<p>The UI does not hold one long request open. <code>POST /api/jobs</code> queues the analysis on a small worker pool (<code>MISSYNC_MAX_CONCURRENT_ANALYSES</code>, default 2; extra requests wait as <i>queued</i>). The engine reports a stage and percentage between its steps (parse, read schema, copy sample, profile, apply, compare, reconcile, trace impact), the UI polls <code>GET /api/jobs/{id}</code> to draw the progress bar, and <code>DELETE /api/jobs/{id}</code> cancels the run at the next step boundary. An overall deadline (<code>MISSYNC_ANALYSIS_DEADLINE_S</code>, default 600 s) stops runaway analyses. <code>POST /api/analyses</code> still exists as a synchronous call for scripts; it uses the same pool, so concurrency stays bounded either way. The command line (<code>missync analyze</code>) calls the engine directly without the server.</p>
+
+<h3>4.3&nbsp; Sandbox isolation</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 270" role="img" aria-label="Sandbox schemas base and cand">
+  <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#182030"/></marker></defs>
+  <rect x="10" y="40" width="190" height="160" rx="10" fill="#fdf0e7" stroke="#c2410c" stroke-width="2"/>
+  <text x="105" y="66" class="m b" text-anchor="middle">Source database</text><text x="105" y="88" class="s mu" text-anchor="middle">read-only session</text>
+  <text x="105" y="110" class="s" text-anchor="middle">orders · customers</text><text x="105" y="126" class="s" text-anchor="middle">views …</text>
+  <text x="105" y="170" class="s b" text-anchor="middle" style="fill:#c2410c">never written to</text>
+  <path d="M200 110 H262" stroke="#182030" stroke-width="2" marker-end="url(#a5)"/><text x="231" y="100" class="s mu" text-anchor="middle">bounded</text><text x="231" y="136" class="s mu" text-anchor="middle">sample</text>
+  <rect x="266" y="14" width="486" height="240" rx="12" fill="#fff" stroke="#15803d" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="280" y="36" class="m b">In-memory DuckDB (disposable)</text>
+  <text x="740" y="36" class="s mu" text-anchor="end">external access OFF · config locked · 1 GB · timeout</text>
+  <rect x="284" y="52" width="210" height="130" rx="9" fill="#e8f6ee" stroke="#15803d"/>
+  <text x="389" y="76" class="m b" text-anchor="middle">schema  base</text><text x="389" y="96" class="s mu" text-anchor="middle">untouched copy of the sample</text><text x="389" y="120" class="s" text-anchor="middle">profile → "before"</text><text x="389" y="140" class="s" text-anchor="middle">views recreated here</text>
+  <rect x="540" y="52" width="196" height="130" rx="9" fill="#eef0ff" stroke="#4f46e5"/>
+  <text x="638" y="76" class="m b" text-anchor="middle">schema  cand</text><text x="638" y="96" class="s mu" text-anchor="middle">clone of base</text><text x="638" y="120" class="s b" text-anchor="middle" style="fill:#4f46e5">proposed SQL runs HERE</text><text x="638" y="140" class="s" text-anchor="middle">profile → "after"</text>
+  <path d="M494 117 H538" stroke="#182030" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#a5)"/><text x="516" y="108" class="s mu" text-anchor="middle">clone</text>
+  <rect x="284" y="198" width="452" height="42" rx="8" fill="#fafbfe" stroke="#c9cfdd"/>
+  <text x="510" y="216" class="m b" text-anchor="middle">Compare base ⇄ cand</text><text x="510" y="232" class="s mu" text-anchor="middle">schema diff · row counts · NULL rates · duplicate keys · key-based reconcile · metrics</text>
+</svg>
+<figcaption>Figure 6 — Why the sandbox is safe: a copy, two schemas, no outbound access. Qualified names such as <code>public.orders</code> are rewritten so the SQL can only hit <code>cand</code>.</figcaption></figure>
+
+<h3>4.4&nbsp; Data model</h3>
+<table>
+<tr><th style="width:22%">Entity</th><th>Where</th><th>Contents</th></tr>
+<tr><td><code>SchemaSnapshot</code></td><td>models.py</td><td>dialect + tables → columns (name, type, nullable, PK), kind (table/view), view definition, row count</td></tr>
+<tr><td><code>Finding</code></td><td>models.py</td><td>category, title, <b>severity</b>, <b>kind</b> (predicted/verified), <b>confidence</b> + reason, summary, evidence (dict), affected objects, recommendation, <code>possibly_intended</code>, limitations</td></tr>
+<tr><td><code>AnalysisResult</code></td><td>models.py</td><td>statements, validation outcomes, schema diff, table + metric comparison, reconciliation, impact graph, findings, summary, limitations</td></tr>
+<tr><td>connections, assets, baselines, analyses</td><td>store/db.py (SQLite)</td><td>Connection params are stored <b>encrypted</b> (Fernet). Assets are user-declared consumers (<code>depends_on: ["table", "table.column"]</code>). Baselines hold schema + profile JSON. Analyses hold the full result JSON.</td></tr>
+</table>
+
+<!-- =============================== 5 TECH =============================== -->
+<h2>5&nbsp;&nbsp;Technology choices — what was used and why</h2>
+<table>
+<tr><th style="width:21%">Technology</th><th style="width:19%">Role</th><th>Why this and not something else</th></tr>
+<tr><td><b>FastAPI</b> + Pydantic v2</td><td>HTTP API, validation</td><td>Typed request/response models double as documentation; automatic OpenAPI; small footprint.</td></tr>
+<tr><td><b>SQLGlot</b></td><td>SQL parsing, transpiling, column lineage</td><td>Pure Python, 20+ dialects, an AST to inspect (<code>ALTER</code>, <code>DROP</code>, <code>DELETE</code>), a transpiler (any dialect → DuckDB) and <code>lineage()</code> for column-level paths. Nothing is executed to analyse it.</td></tr>
+<tr><td><b>DuckDB</b></td><td>Sandbox engine; CSV/Parquet reader</td><td>Embedded, in-memory, fast analytics SQL, can lock down external access, and reads files natively. Gives one sandbox for every source with no staging infrastructure.</td></tr>
+<tr><td><b>SQLAlchemy 2</b></td><td>Metadata store; Postgres connector</td><td>Mature, safe parameter binding, identical code for the metadata DB and Postgres.</td></tr>
+<tr><td><b>cryptography (Fernet)</b></td><td>Secrets at rest</td><td>Authenticated symmetric encryption, one-line API.</td></tr>
+<tr><td><b>Jinja2</b></td><td>HTML report</td><td>Autoescaping prevents injection through titles, SQL or table names.</td></tr>
+<tr><td><b>React 18 + TypeScript + Vite</b></td><td>Frontend</td><td>Type-safe API client, fast builds, small static bundle served by FastAPI.</td></tr>
+<tr><td><b>Tailwind CSS</b> + Radix Tabs + lucide</td><td>Styling and accessible primitives</td><td>CSS variables give light/dark themes; Radix tabs bring keyboard navigation and ARIA for free.</td></tr>
+<tr><td><b>React Flow (@xyflow)</b></td><td>Impact graph</td><td>Interactive node graph, lazy-loaded so the main bundle stays small.</td></tr>
+<tr><td><b>CodeMirror 6</b></td><td>SQL editor</td><td>Light, accessible, SQL syntax highlighting.</td></tr>
+<tr><td><b>pytest, ruff</b></td><td>Tests, lint</td><td>98 backend tests (3 need a live PostgreSQL), 86% line coverage; lint is clean.</td></tr>
+<tr><td><b>Playwright (Chromium)</b></td><td>UI walkthrough, this PDF</td><td>Drove the real UI end-to-end and rendered this handbook.</td></tr>
+<tr><td><b>pgserver</b></td><td>Real PostgreSQL 16 for testing</td><td>Docker was unavailable; this pip package ships PostgreSQL binaries so the Postgres connector could be tested live.</td></tr>
+<tr><td>Docker Compose</td><td>Local Postgres + app</td><td>Provided (<code>docker-compose.yml</code>, <code>Dockerfile</code>) but not executed in the build environment.</td></tr>
+</table>
+
+<h3>Key trade-offs decided during the build</h3>
+<div class="card"><b>DuckDB as a universal sandbox instead of cloning each database.</b> Pros: no write privileges or infrastructure; isolated by construction; identical behaviour for every source. Cons: constraints, triggers, indexes and engine-specific semantics are not reproduced; large tables are sampled. Mitigation: sampling and dialect differences are disclosed as limitations and lower confidence.</div>
+<div class="card"><b>Cloud warehouses: static + dry-run only.</b> Copying warehouse tables is slow and costly, so BigQuery and Snowflake never run the sandbox; results are labelled "predicted".</div>
+<div class="card"><b>Separate "dialect of the change" input.</b> The SQL a user proposes (e.g. PostgreSQL <code>ALTER … TYPE</code>) can differ from the source's own dialect (SQLite for the demo), so the request carries both.</div>
+<div class="card"><b>SQLite for metadata.</b> Zero-ops persistence suits a single-instance tool. Trade-off: one writer; fine for the intended scale.</div>
+
+<!-- =============================== 6 BUILD =============================== -->
+<h2 class="chapter">6&nbsp;&nbsp;How it was built, step by step</h2>
+<p>The build followed a plan agreed before any code was written (written to a plan file and approved), then proceeded in layers from the inside out: the safest, most testable code first, the UI last.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 760 150" role="img" aria-label="Build timeline">
+  <line x1="30" y1="60" x2="730" y2="60" stroke="#4f46e5" stroke-width="3"/>
+  <g class="s">
+  <circle cx="50" cy="60" r="10" fill="#4f46e5"/><text x="50" y="100" text-anchor="middle" class="b">0 Plan</text><text x="50" y="115" text-anchor="middle" class="mu">scope, risks</text>
+  <circle cx="145" cy="60" r="10" fill="#4f46e5"/><text x="145" y="100" text-anchor="middle" class="b">1 Foundations</text><text x="145" y="115" text-anchor="middle" class="mu">models, security</text>
+  <circle cx="240" cy="60" r="10" fill="#4f46e5"/><text x="240" y="100" text-anchor="middle" class="b">2 Connectors</text><text x="240" y="115" text-anchor="middle" class="mu">6 types</text>
+  <circle cx="335" cy="60" r="10" fill="#4f46e5"/><text x="335" y="100" text-anchor="middle" class="b">3 Static</text><text x="335" y="115" text-anchor="middle" class="mu">parse, diff, lineage</text>
+  <circle cx="430" cy="60" r="10" fill="#15803d"/><text x="430" y="100" text-anchor="middle" class="b">4 Dynamic</text><text x="430" y="115" text-anchor="middle" class="mu">sandbox, profile</text>
+  <circle cx="525" cy="60" r="10" fill="#15803d"/><text x="525" y="100" text-anchor="middle" class="b">5 Engine</text><text x="525" y="115" text-anchor="middle" class="mu">findings, severity</text>
+  <circle cx="620" cy="60" r="10" fill="#c2410c"/><text x="620" y="100" text-anchor="middle" class="b">6 API + UI</text><text x="620" y="115" text-anchor="middle" class="mu">store, reports</text>
+  <circle cx="712" cy="60" r="10" fill="#c2410c"/><text x="712" y="100" text-anchor="middle" class="b">7 Verify</text><text x="712" y="115" text-anchor="middle" class="mu">live PG, browser</text>
+  </g>
+</svg>
+<figcaption>Figure 7 — Build phases, inside-out.</figcaption></figure>
+
+<h3>Step 0 — Plan and environment</h3>
+<ul>
+<li>Inspected the repository (empty) and the toolchain: Python 3.12 and Node were present; <b>Docker was not</b>. That one fact shaped later decisions (use DuckDB as the sandbox; find another way to test Postgres).</li>
+<li>Wrote a build plan: monorepo layout, sandbox strategy, evidence labelling, demo-mode rules, build order, verification criteria.</li>
+<li>Network was flaky: package installs needed long timeouts and retries — handled by installing core packages first and optional connector libraries one by one.</li>
+</ul>
+
+<h3>Step 1 — Foundations (<code>models.py</code>, <code>config.py</code>, <code>security.py</code>)</h3>
+<ul>
+<li>Pydantic models for schema snapshots, findings, impact graph, requests and results — the vocabulary every other module speaks.</li>
+<li>Settings from <code>MISSYNC_*</code> env vars (mode, data dir, limits, host policy).</li>
+<li>Security helpers written <i>first</i>: secret redaction + a logging filter, Fernet encryption, SSRF host validation, data-dir path confinement, identifier quoting.</li>
+</ul>
+
+<h3>Step 2 — Connectors (<code>connectors/</code>)</h3>
+<ul>
+<li>A small abstract <code>Connector</code> (<code>test</code>, <code>discover</code>, bounded <code>fetch_rows</code>, optional <code>query</code>) plus a <code>Capabilities</code> declaration.</li>
+<li>SQLite (<code>mode=ro</code> + <code>query_only</code>), DuckDB (<code>read_only=True</code>; CSV/Parquet exposed as views), PostgreSQL (SQLAlchemy; read-only session; statement timeout), BigQuery and Snowflake (official clients, imported lazily).</li>
+<li>A registry (<code>build_connector</code>) that validates required parameters and applies path/host policy.</li>
+</ul>
+
+<h3>Step 3 — Static analysis</h3>
+<ul>
+<li><b><code>sql_parser.py</code></b>: parse with SQLGlot, classify each statement, extract structural changes (<code>drop_column</code>, <code>alter_type</code>, <code>rename_column</code>, <code>delete_rows</code> …) and flags such as "no WHERE". <code>assert_single_select</code> guards metric/ad-hoc queries.</li>
+<li><b><code>schema_diff.py</code></b>: normalise types into families, classify a change as widening / narrowing / incompatible, diff two snapshots, hash a stable schema signature.</li>
+<li><b><code>lineage.py</code></b>: from view definitions build table-level and column-level edges (SQLGlot <code>lineage()</code>); add user-registered assets; mark views whose lineage is incomplete; compute downstream impact by graph traversal.</li>
+</ul>
+
+<h3>Step 4 — Dynamic analysis</h3>
+<ul>
+<li><b><code>sandbox.py</code></b>: copy bounded samples via a temp CSV and <code>COPY</code> (fast, type-cast by DuckDB), create <code>base</code> and <code>cand</code> schemas, recreate views in both, then <b>lock down</b> (<code>enable_external_access=false</code>, <code>lock_configuration=true</code>). Apply transpiled statements to <code>cand</code> only, with a timeout thread calling <code>interrupt()</code>.</li>
+<li><b><code>profiling.py</code></b>: per-column null counts/rates, distinct counts, min/max/avg/sum, per-key duplicate groups; <code>compare_profiles</code> for before/after.</li>
+<li><b><code>reconcile.py</code></b>: anti-joins and an IS-DISTINCT-FROM row comparison, only when the key is unique in the baseline.</li>
+</ul>
+
+<h3>Step 5 — The engine (<code>engine.py</code>, <code>severity.py</code>)</h3>
+<ul>
+<li>Orchestrates steps 3–4, turns measurements into <code>Finding</code> objects, merges predicted and verified results, escalates severity when dependents exist, builds the impact graph and a plain-language verdict.</li>
+<li>Rules live in <code>severity.py</code> as small pure functions so each is unit-testable and readable.</li>
+<li><b>First end-to-end run</b> of the four scenarios exposed the first real bug (see the table below).</li>
+</ul>
+
+<h3>Step 6 — Persistence, API, reports, UI</h3>
+<ul>
+<li><b>Store</b>: SQLAlchemy tables for connections (encrypted params), assets, baselines, analyses.</li>
+<li><b>API</b> (<code>api/app.py</code>): connections, schema, lineage, assets, analyses, scenarios, baselines, report downloads; demo-mode guard; serves the built UI.</li>
+<li><b>Reports</b>: JSON (versioned) and a self-contained HTML report with light/dark CSS, escaping and a strict CSP header.</li>
+<li><b>Frontend</b>: Overview, Connections, Analyze, Result (tabs), Baselines, History; lazy-loaded graph; light/dark theme.</li>
+<li><b>Demo data</b>: deterministic generator (seeded RNG) for a synthetic shop: customers, products, orders, order_items, segment_map, three views and four registered assets; four scenarios.</li>
+</ul>
+
+<h3>Step 7 — Verification and hardening</h3>
+<ul>
+<li>70 automated tests at the time of the first edition (now 98 backend tests); then a <b>real PostgreSQL 16</b> and a <b>real Chromium</b> were added to check what had only been assumed.</li>
+<li>Screenshots were inspected; layout problems were found and fixed (below).</li>
+</ul>
+
+<h3>Step 8 — Making it releasable (after the first edition)</h3>
+<ul>
+<li><b>UI-driven connections.</b> A guided connector picker, URL paste, a one-click embedded sample PostgreSQL (<code>pgserver</code>, no Docker), a separate <i>Test connection</i> step with server version and latency, readable errors, row preview and schema search.</li>
+<li><b>Hardening.</b> Optional bearer-token auth and a refusal to listen on a non-local address without it; per-connector parameter whitelists; connecting to the validated IP (DNS-rebinding guard); request-size cap; request ids, security headers and a global error handler.</li>
+<li><b>Reliability.</b> Background jobs with progress, cancel, bounded concurrency and a deadline; SQLite WAL with a busy timeout; schema versioning with migrations; history retention; <code>/api/ready</code>; Postgres row counts from planner estimates instead of a full count per table.</li>
+<li><b>Integration.</b> <code>missync analyze</code> for CI (folder of migrations, <code>--fail-on</code> exit codes, JSON/HTML reports) and a composite GitHub Action.</li>
+<li><b>Packaging and project files.</b> A <code>missync</code> command, the UI bundled into the wheel (this also fixed the UI not being found in a non-editable install), <code>install.sh</code>, a release script, CI workflows, LICENSE, SECURITY, CONTRIBUTING and CHANGELOG.</li>
+</ul>
+
+<h3>Problems met and how they were solved</h3>
+<table>
+<tr><th style="width:28%">Problem</th><th style="width:32%">Symptom</th><th>Resolution</th></tr>
+<tr><td>View body extraction took the first <code>" AS "</code></td><td>Views failed to parse; lineage "incomplete" everywhere; metrics "could not be computed"</td><td>Replaced with a regex that strips <code>CREATE [OR REPLACE] VIEW name [(cols)] AS</code> only; shared helper <code>view_body()</code>.</td></tr>
+<tr><td>SQLGlot 30 stores <code>DROP</code> targets in <code>tables</code>, not <code>this</code></td><td>Dropped table/column name came back empty</td><td>Added <code>_target()</code> that checks <code>this</code>, <code>tables</code>, <code>expressions</code>; regression test added.</td></tr>
+<tr><td>DuckDB cannot prepare DDL parameters</td><td>CSV/Parquet registration failed</td><td>Inline the validated, existing file path as an escaped literal.</td></tr>
+<tr><td>Test harness ignored the schema argument</td><td>Profiling silently returned an error entry</td><td>Fixed harness; engine now also surfaces profiling errors as limitations instead of hiding them.</td></tr>
+<tr><td>Postgres <code>information_schema</code> drops numeric precision</td><td><code>numeric(10,2)</code> became <code>DECIMAL(18,3)</code> in the sandbox</td><td>Read types with <code>format_type()</code> from <code>pg_attribute</code>; live test asserts <code>NUMERIC(10,2)</code>.</td></tr>
+<tr><td>Graph edges looped around nodes</td><td>Visible in the first Chromium screenshot</td><td>Left→right handle positions.</td></tr>
+<tr><td>Phone layout cramped the verdict; no theme toggle</td><td>Visible in the mobile screenshot</td><td>Stack buttons under the title on small screens; theme button in the top bar.</td></tr>
+<tr><td>SQLite showed <code>INTEGER PRIMARY KEY</code> as nullable</td><td>Schema browser</td><td>Primary keys treated as NOT NULL.</td></tr>
+<tr><td>A README encoding mix-up from a scripted edit</td><td>Garbled characters</td><td>Rewrote as UTF-8 and re-checked.</td></tr>
+</table>
+
+<!-- =============================== 7 ENGINE =============================== -->
+<h2>7&nbsp;&nbsp;The analysis engine in depth</h2>
+
+<h3>7.1&nbsp; Static analysis: what is recognised</h3>
+<table>
+<tr><th style="width:30%">SQL</th><th style="width:22%">Recognised as</th><th>Predicted consequence</th></tr>
+<tr><td><code>ALTER TABLE t DROP COLUMN c</code></td><td><code>drop_column</code></td><td>Consumers of <code>t.c</code> break (High, escalated if dependents exist)</td></tr>
+<tr><td><code>ALTER COLUMN c TYPE x</code></td><td><code>alter_type</code></td><td>Classified widening / narrowing / incompatible from declared types</td></tr>
+<tr><td><code>RENAME COLUMN / TABLE</code></td><td><code>rename_*</code></td><td>Same as removal for old name</td></tr>
+<tr><td><code>DROP TABLE / VIEW</code></td><td><code>drop_object</code></td><td>Everything reading it breaks</td></tr>
+<tr><td><code>DELETE / UPDATE</code> without WHERE</td><td><code>no_where</code></td><td>Touches every row (High)</td></tr>
+<tr><td><code>CREATE OR REPLACE VIEW</code></td><td><code>replace_object</code></td><td>Definition change; data effects measured in the sandbox</td></tr>
+<tr><td>Unsupported commands (e.g. <code>COPY</code>, <code>PRAGMA</code>)</td><td><code>other</code></td><td><b>Skipped</b> in the sandbox and reported as a limitation</td></tr>
+</table>
+
+<h3>7.2&nbsp; Type-change classification</h3>
+<table>
+<tr><th style="width:26%">Change</th><th style="width:16%">Class</th><th>Reason</th></tr>
+<tr><td>INTEGER → BIGINT</td><td><span class="pill p-low">widening</span></td><td>Every old value fits</td></tr>
+<tr><td>DECIMAL(10,2) → DECIMAL(12,2)</td><td><span class="pill p-low">widening</span></td><td>Precision and scale not reduced</td></tr>
+<tr><td>DECIMAL(10,2) → INTEGER</td><td><span class="pill p-high">narrowing</span></td><td>Fractions rounded away</td></tr>
+<tr><td>TEXT → INTEGER</td><td><span class="pill p-high">narrowing</span></td><td>Non-numeric text cannot convert</td></tr>
+<tr><td>TIMESTAMP → DATE</td><td><span class="pill p-high">narrowing</span></td><td>Time of day lost</td></tr>
+<tr><td>JSON → BOOLEAN</td><td><span class="pill p-high">incompatible</span></td><td>No sensible mapping</td></tr>
+</table>
+
+<h3>7.3&nbsp; Lineage and impact</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 230" role="img" aria-label="Lineage example with column-level edges">
+  <defs><marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6575"/></marker></defs>
+  <rect x="10" y="85" width="150" height="60" rx="9" fill="#fdf0e7" stroke="#c2410c" stroke-width="2"/><text x="85" y="110" class="m b" text-anchor="middle">orders</text><text x="85" y="128" class="s mu" text-anchor="middle">changed: amount</text>
+  <rect x="270" y="20" width="190" height="52" rx="9" fill="#fbf3dc" stroke="#a16207" stroke-width="1.8"/><text x="365" y="42" class="m b" text-anchor="middle">v_daily_revenue</text><text x="365" y="59" class="s mu" text-anchor="middle">affected column: revenue</text>
+  <rect x="270" y="90" width="190" height="52" rx="9" fill="#fbf3dc" stroke="#a16207" stroke-width="1.8"/><text x="365" y="112" class="m b" text-anchor="middle">v_customer_ltv</text><text x="365" y="129" class="s mu" text-anchor="middle">affected: lifetime_value</text>
+  <rect x="270" y="160" width="190" height="52" rx="9" fill="#f4f6fb" stroke="#c9cfdd" stroke-dasharray="4 3"/><text x="365" y="182" class="m b" text-anchor="middle">v_legacy (unreadable)</text><text x="365" y="199" class="s mu" text-anchor="middle">lineage incomplete → "possible"</text>
+  <rect x="570" y="20" width="180" height="52" rx="9" fill="#fdecec" stroke="#b91c1c" stroke-width="1.8"/><text x="660" y="42" class="m b" text-anchor="middle">Revenue Dashboard</text><text x="660" y="59" class="s mu" text-anchor="middle">asset · depends on revenue</text>
+  <rect x="570" y="90" width="180" height="52" rx="9" fill="#fdecec" stroke="#b91c1c" stroke-width="1.8"/><text x="660" y="112" class="m b" text-anchor="middle">Churn Model Features</text><text x="660" y="129" class="s mu" text-anchor="middle">asset · lifetime_value</text>
+  <g stroke="#5b6575" stroke-width="1.7" fill="none" marker-end="url(#a6)"><path d="M160 105 C 215 80, 225 50, 268 46"/><path d="M160 115 H268"/><path d="M160 125 C 215 150, 225 180, 268 186" stroke-dasharray="5 4"/><path d="M460 46 H568"/><path d="M460 116 H568"/></g>
+</svg>
+<figcaption>Figure 8 — Column-level tracing. A change to <code>orders.discount_code</code> would impact nothing here; a change to <code>orders.amount</code> reaches two views and two assets. A view whose SQL cannot be read becomes "possibly impacted" and flips the whole graph to "lineage incomplete".</figcaption></figure>
+<ul>
+<li>Edges come from SQLGlot's <code>lineage()</code> run on each view output column against the discovered schema; leaves that resolve to a known table.column become column edges.</li>
+<li>Impact is a breadth-first walk from the changed objects. Whole-object changes cascade to every dependent; column changes follow only column edges (plus "possible" edges through unreadable views).</li>
+<li>Registered assets match when they depend on a changed column, an impacted column, or an impacted object. A table-level dependency with column-level change is reported as "column usage unknown".</li>
+</ul>
+
+<h3>7.4&nbsp; Severity rules (all of them)</h3>
+<table>
+<tr><th style="width:50%">Signal</th><th>Severity</th></tr>
+<tr><td>Removed/renamed table or column</td><td>High</td></tr>
+<tr><td>Type change: narrowing or incompatible / widening</td><td>High / Low</td></tr>
+<tr><td>NOT NULL added</td><td>Medium</td></tr>
+<tr><td>UPDATE/DELETE without WHERE</td><td>High</td></tr>
+<tr><td>Rows lost (verified): ≥ 10% / &gt; 0</td><td>High / Medium</td></tr>
+<tr><td>Records missing by key: ≥ 5% / &gt; 0</td><td>High / Medium</td></tr>
+<tr><td>NULL-rate increase (percentage points): ≥ 20 / ≥ 5 / &gt; 0.1</td><td>High / Medium / Low</td></tr>
+<tr><td>New duplicate keys</td><td>High</td></tr>
+<tr><td>Metric drift: ≥ 10% or ≥ 10× tolerance / &gt; tolerance</td><td>High / Medium</td></tr>
+<tr><td>A view stops binding after the change</td><td>High</td></tr>
+<tr><td><b>Escalation:</b> a dependent view or registered asset is affected</td><td>+1 level (cap Critical)</td></tr>
+</table>
+<div class="callout"><b class="t">No arbitrary score</b>Thresholds are deliberately few, visible and editable in one file. Each finding shows the measured numbers that triggered it, so a reader can disagree with the rule — not just with a number.</div>
+
+<h3>7.5&nbsp; Reconciliation and its safety rule</h3>
+<p>For each table with a key (declared, or primary key), Missync counts <b>matched</b> keys, keys <b>missing</b> after the change, keys <b>new</b> after the change, and matched rows whose values <b>changed</b> (per column, values compared as text so a pure type change is not reported as a value change). <b>If the key is not unique in the baseline, the comparison is refused</b> with the reason — an unreliable comparison is worse than none.</p>
+
+<h3>7.6&nbsp; The evidence model</h3>
+<table>
+<tr><th style="width:20%">Field</th><th>Meaning</th></tr>
+<tr><td><b>kind</b></td><td><i>verified</i> = measured in the sandbox; <i>predicted</i> = from static analysis only</td></tr>
+<tr><td><b>confidence</b></td><td>high = full copy of the table; medium = sampled data or measured through a recreated view; low = lineage incomplete / static only. A one-line reason is stored.</td></tr>
+<tr><td><b>possibly_intended</b></td><td>The statement plausibly explains the difference (e.g. rows lost after a filtered DELETE). Shown as a tag, severity unchanged.</td></tr>
+<tr><td><b>limitations</b></td><td>What this particular finding cannot tell you.</td></tr>
+<tr><td><b>evidence</b></td><td>The raw numbers (counts, before/after rates, example keys).</td></tr>
+</table>
+
+<h3>7.7&nbsp; Baselines</h3>
+<p>A baseline stores a schema snapshot, its SHA-256 <b>signature</b> (names, types, nullability, view SQL — formatting noise in view SQL is normalised away) and a profile of the sampled data. Comparing a baseline to "now" or to another baseline re-uses the same diff and finding code, plus an explicit limitation that growth in row counts between two dates is often normal.</p>
+
+<!-- =============================== 8 TOUR =============================== -->
+<h2 class="chapter">8&nbsp;&nbsp;Tour of the product</h2>
+<p>All screenshots below were captured from the running application in headless Chromium during verification.</p>
+
+<h3>8.1&nbsp; Overview</h3>
+<div class="shot"><img src="../../shots/desktop-light-overview.png"><figcaption>Overview: four deterministic sample scenarios and recent analyses. The banner reminds visitors that the public demo uses synthetic data only.</figcaption></div>
+
+<h3>8.2&nbsp; Connections and schema discovery</h3>
+<div class="shot crop" style="max-height:560px"><img src="../../shots/desktop-light-connections.png"><figcaption style="padding:0 6pt 4pt">Schema discovery with search. Primary keys are marked; view definitions are shown; the "Read-only discovery" badge states how read-only is enforced for this connector. Each connection has a re-test button and a two-step delete. In demo mode adding connections is disabled with an explanation.</figcaption></div>
+
+<h3>8.2a&nbsp; Connecting a database — entirely in the UI</h3>
+<p>Start the app with <code>.\start.ps1</code> (Windows) or <code>./install.sh</code>; both run in self-hosted mode, so no flags or config files are needed. Then:</p>
+<ol>
+<li><b>Connections → PostgreSQL.</b> Choose the connector card. For a quick demo press <b>Launch sample database</b>: Missync starts an embedded PostgreSQL with the demo shop data, fills the form and tests it. For your own server, fill the fields or paste a <code>postgresql://user:pass@host:5432/db</code> URL.</li>
+<li><b>Test connection.</b> Shows the server version, latency, how many tables and views were found and whether the session is confirmed read-only. Failures are explained (wrong password, unknown database, unreachable host, SSL mode) without echoing secrets. <b>Save connection</b> is enabled only after a successful test.</li>
+<li><b>Browse.</b> The new connection is selected automatically; search the schema and press <b>Preview rows</b> on any table (first 20 rows, read-only).</li>
+<li><b>Register downstream assets</b> (dashboards, reports, jobs) in the <i>Downstream assets</i> panel so impact analysis can name them.</li>
+<li><b>Analyze.</b> The Analyze page offers one-click starter changes generated from the discovered schema.</li>
+</ol>
+<div class="shot crop" style="max-height:620px"><img src="../../shots/desktop-light-connect-tested.png"><figcaption style="padding:0 6pt 4pt">Sample PostgreSQL launched from the UI and tested: server version, latency, objects found and read-only confirmation. (Row counts on PostgreSQL come from planner estimates and are shown with “~”.)</figcaption></div>
+<div class="shot crop" style="max-height:620px"><img src="../../shots/desktop-light-connect-browse.png"><figcaption style="padding:0 6pt 4pt">After saving: the connection is selected, the success banner offers “Analyze a change”, and a table can be expanded and its first rows previewed.</figcaption></div>
+<div class="callout"><b class="t">Sample database caveat</b>The embedded sample PostgreSQL uses trust authentication on 127.0.0.1 only, so any password is accepted there. It exists for demos; use a real server to see authentication errors.</div>
+
+<h3>8.3&nbsp; Analyze a change</h3>
+<div class="shot"><img src="../../shots/desktop-light-analyze.png"><figcaption>The analysis screen: SQL editor with syntax highlighting, a prominent <b>Analyze change</b> action, connection, dialect of the change, title, comparison keys and optional business metrics with tolerances. Sample scenarios and schema-based starter changes load with one click. Pressing <b>Analyze change</b> (or Ctrl/Cmd+Enter) queues a background job and shows a live stage and progress bar with a <b>Cancel</b> button.</figcaption></div>
+
+<h3>8.4&nbsp; Results</h3>
+<div class="shot crop" style="max-height:560px"><img src="../../shots/desktop-light-result-findings.png"><figcaption style="padding:0 6pt 4pt">Risk summary (severity, "validated in isolated copy", verdict, counts, recommended actions) and the finding cards. Each card shows severity, verified/predicted, confidence, "may be intended", next step, affected objects and expandable evidence.</figcaption></div>
+<div class="shot"><img src="../../shots/desktop-light-result-impact.png"><figcaption>Impact graph for the type-change scenario: the changed table (orange) → impacted views (amber) → registered downstream assets. Dashed edges, when present, mark links Missync could not resolve; an accessible text list sits under the graph.</figcaption></div>
+<div class="shot crop" style="max-height:640px"><img src="../../shots/desktop-light-result-data.png"><figcaption style="padding:0 6pt 4pt"><b>Data &amp; metrics.</b> Note the lesson in this very screenshot: the revenue metric shows +0.00% drift, yet reconciliation shows all 5,000 order amounts changed. A metric alone would have called this change safe.</figcaption></div>
+<div class="two">
+<div class="shot crop" style="max-height:300px"><img src="../../shots/desktop-light-result-schema.png"><figcaption style="padding:0 6pt 4pt">Schema tab: change kind, object, type transition and compatibility class.</figcaption></div>
+<div class="shot crop" style="max-height:300px"><img src="../../shots/desktop-light-result-sql.png"><figcaption style="padding:0 6pt 4pt">SQL &amp; limits tab: per-statement outcome, the executing engine, and recorded limitations.</figcaption></div>
+</div>
+
+<h3>8.5&nbsp; Baselines and history</h3>
+<div class="shot crop" style="max-height:620px"><img src="../../shots/desktop-light-baselines.png"><figcaption style="padding:0 6pt 4pt">Capture baselines, compare each against the current state or another baseline. Identical signatures are reported as such; the limitation about normal data growth is always shown.</figcaption></div>
+<div class="shot crop" style="max-height:420px"><img src="../../shots/desktop-light-history.png"><figcaption style="padding:0 6pt 4pt"><b>History</b> with title search, severity filter, paging and a confirmed delete. History keeps the newest 500 analyses by default (<code>MISSYNC_HISTORY_LIMIT</code>).</figcaption></div>
+
+<h3>8.6&nbsp; Responsive and dark mode</h3>
+<div class="two">
+<div class="shot crop" style="max-height:560px"><img src="../../shots/mobile-dark-result-findings.png"><figcaption style="padding:0 6pt 4pt">Phone width, dark theme: the verdict stacks above the download buttons; navigation scrolls horizontally; a theme toggle sits in the top bar.</figcaption></div>
+<div class="shot crop" style="max-height:560px"><img src="../../shots/mobile-dark-overview.png"><figcaption style="padding:0 6pt 4pt">Overview on a phone. Colour tokens are CSS variables that switch with the system or manual theme.</figcaption></div>
+</div>
+
+<h3>8.7&nbsp; The four scenarios and what Missync found</h3>
+<p>Each scenario was run against the bundled SQLite database <i>and</i> a live PostgreSQL 16 seeded with the equivalent SQL. Numbers below are from the SQLite run; the PostgreSQL run differs slightly because its generator is arithmetic rather than random (e.g. 250 vs 256 customers).</p>
+<table>
+<tr><th style="width:17%">Scenario</th><th style="width:30%">Proposed SQL</th><th>Verified findings</th></tr>
+<tr><td><b>Type change</b></td><td><code>ALTER TABLE orders ALTER COLUMN amount TYPE INTEGER</code></td><td><span class="pill p-crit">Critical</span> DECIMAL(10,2) → INTEGER is narrowing, with dependent views and 4 registered assets impacted (escalated from High). <span class="pill p-high">High</span> 5,000 of 5,000 matched order amounts changed. Revenue metric drift ≈ 0% — <i>masked</i> by rounding.</td></tr>
+<tr><td><b>Missing records</b></td><td><code>DELETE FROM customers WHERE email LIKE '%shop-demo.test' AND country IN ('BR','IN')</code></td><td>256 of 1,000 customers lost (25.6%) — <span class="pill p-low">may be intended</span> (filtered DELETE) but critical because views depend on them: <code>v_customer_ltv</code> −256 rows, <code>v_order_details</code> −1,280 rows; support-console metric −25.6%. Measured count equals an independently computed ground truth.</td></tr>
+<tr><td><b>Metric drift</b></td><td><code>CREATE OR REPLACE VIEW v_daily_revenue … status IN ('completed','refunded')</code></td><td>No structural break. Revenue +7.18%, order count +7.03% (beyond ±1% tolerance), 2 extra daily rows. Tagged <span class="pill p-low">may be intended</span>; only Medium — it is a definition change, not a defect.</td></tr>
+<tr><td><b>Data-quality regression</b></td><td><code>UPDATE customers SET segment = (SELECT … FROM segment_map …)</code></td><td><span class="pill p-high">High</span> No WHERE clause (every row touched). NULL rate on <code>segment</code> 0% → 50.7%; 836 rows (83.6%) changed value; "customers with a segment" −50.7%. Cause: the lookup table only covers 4 of 8 countries.</td></tr>
+</table>
+
+<!-- =============================== 9 SECURITY =============================== -->
+<h2>9&nbsp;&nbsp;Security model</h2>
+<figure class="fig">
+<svg viewBox="0 0 760 250" role="img" aria-label="Layered security controls">
+  <g>
+   <rect x="10" y="10" width="740" height="230" rx="12" fill="#fafbfe" stroke="#c9cfdd"/>
+   <text x="24" y="32" class="m b">Mode guard — demo mode exposes only the bundled synthetic DB; custom connections refused server-side</text>
+   <rect x="26" y="44" width="708" height="186" rx="10" fill="#fff" stroke="#4f46e5"/>
+   <text x="40" y="66" class="m b">Input controls — SQL size cap · single-SELECT metrics · parse before anything runs · bound parameters · quoted identifiers</text>
+   <rect x="42" y="78" width="676" height="142" rx="9" fill="#fff" stroke="#c2410c"/>
+   <text x="56" y="100" class="m b">Connection controls — read-only sessions · host validation (SSRF) · path confinement · encrypted secrets · log redaction</text>
+   <rect x="58" y="112" width="644" height="98" rx="8" fill="#e8f6ee" stroke="#15803d"/>
+   <text x="72" y="134" class="m b">Sandbox — in-memory · no file/network access · config locked · memory + time limits</text>
+   <text x="72" y="156" class="s mu">Candidate SQL can only change a disposable copy; qualified names are stripped so it cannot reach other schemas;</text>
+   <text x="72" y="172" class="s mu">COPY / ATTACH / PRAGMA-style commands are not executed; if a statement fails, later ones are skipped and the</text>
+   <text x="72" y="188" class="s mu">result is labelled partial.</text>
+  </g>
+</svg>
+<figcaption>Figure 9 — Defence in depth. Each layer assumes the one outside it may fail.</figcaption></figure>
+<table>
+<tr><th style="width:26%">Threat</th><th>Control</th><th style="width:20%">Evidence</th></tr>
+<tr><td>Proposed SQL mutates production</td><td>Never executed on the source; read-only connectors; sandbox only</td><td>Test: source row counts unchanged after <code>DELETE; DROP TABLE</code>; live PG writes rejected</td></tr>
+<tr><td>Sandbox escape (read files, exfiltrate)</td><td><code>enable_external_access=false</code>, <code>lock_configuration=true</code></td><td>Test: <code>read_csv('/etc/passwd')</code>, <code>COPY … TO</code> fail / are skipped</td></tr>
+<tr><td>SQL injection</td><td>Identifiers quoted; values bound; metric SQL must be one SELECT</td><td>Test: <code>DELETE</code> metric rejected, not executed</td></tr>
+<tr><td>SSRF via connection host</td><td>Resolve host; block link-local/metadata/reserved; optional private block and allowlist; the connection is made to the validated IP, so a second DNS answer cannot redirect it</td><td>Tests for 169.254.169.254, 0.0.0.0, multicast</td></tr>
+<tr><td>Anyone on the network using a self-hosted server</td><td>Refuses to listen on a non-local address without <code>MISSYNC_API_TOKEN</code>; every <code>/api</code> call except health/ready then needs a bearer token (constant-time compare)</td><td>Tests: 401 without/with a wrong token, 200 with the right one; CLI refuses <code>--host 0.0.0.0</code> without a token; browser run through the token screen</td></tr>
+<tr><td>Crafted connection parameters</td><td>Per-type allow-list of parameters (so internals such as <code>engine</code> cannot be injected); <code>sslmode</code>, schema and port validated</td><td>Tests for unsupported, malformed and out-of-range values</td></tr>
+<tr><td>Path traversal on file sources</td><td>Resolve and confine to the data directory</td><td>Tests for <code>../</code> and absolute paths</td></tr>
+<tr><td>Credential leakage</td><td>Fernet at rest; masked in API responses; redacting log filter</td><td>Tests: stored ciphertext lacks the password; logs lack it</td></tr>
+<tr><td>Stored XSS in reports</td><td>Jinja2 autoescape; <code>Content-Security-Policy: default-src 'none'</code></td><td>Test with <code>&lt;script&gt;</code> in the title</td></tr>
+<tr><td>Public abuse of the demo</td><td>Demo mode blocks custom connections and asset edits</td><td>API tests</td></tr>
+<tr><td>Resource exhaustion</td><td>SQL size cap, request-body cap, caps on metrics/keys, statement timeout, sample cap (&ge;1), 1 GB sandbox memory, bounded worker pool, overall analysis deadline, cancel, history retention</td><td>Tests for job cancel, deadline, pruning and body limit; sampling disclosed in findings</td></tr>
+</table>
+<div class="callout warn"><b class="t">Honest limits</b>There is one shared access token and no user accounts, roles, audit log or per-user history: anyone with the token can use every saved connection and see every analysis. Missync is designed for your own machine or a trusted team network; put TLS (a reverse proxy) in front before exposing it further. A public multi-visitor deployment would additionally need per-visitor isolation and rate limiting, which are not built. See SECURITY.md.</div>
+
+<!-- =============================== 10 CONNECTORS =============================== -->
+<h2>10&nbsp;&nbsp;Connectors and capability matrix</h2>
+<table>
+<tr><th>Capability</th><th>SQLite</th><th>DuckDB</th><th>CSV/ Parquet</th><th>Postgres</th><th>BigQuery</th><th>Snowflake</th></tr>
+<tr><td>Schema discovery</td><td>yes</td><td>yes</td><td>inferred</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>View definitions → lineage</td><td>yes</td><td>yes</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>Row counts</td><td>exact</td><td>exact</td><td>exact</td><td>planner estimate (<code>~</code>), exact if no stats</td><td>metadata</td><td>metadata</td></tr>
+<tr><td>Sandbox validation</td><td>yes</td><td>yes</td><td>yes</td><td>yes (sample)</td><td><b>no</b></td><td><b>no</b></td></tr>
+<tr><td>Read-only enforced by</td><td>mode=ro, query_only</td><td>read_only=True</td><td>views</td><td>session read-only + timeout</td><td>SELECT-only, viewer role</td><td>SELECT-only role</td></tr>
+<tr><td>Authentication</td><td>file (confined)</td><td>file</td><td>file</td><td>user/password, sslmode (validated)</td><td>ADC or service-account JSON</td><td>key-pair or password</td></tr>
+<tr><td><b>Tested live</b></td><td><span class="pill p-ok">yes</span></td><td><span class="pill p-ok">yes</span></td><td><span class="pill p-ok">yes</span></td><td><span class="pill p-ok">yes (PG 16.2)</span></td><td><span class="pill p-no">fakes only</span></td><td><span class="pill p-no">fakes only</span></td></tr>
+</table>
+<p>Only parameters listed for a connector type are accepted from the API (<code>ALLOWED_PARAMS</code> in <code>connectors/__init__.py</code>). The PostgreSQL connector sets <code>default_transaction_read_only</code> and a statement timeout, connects to the validated IP, and reads only the configured schema.</p>
+<h3>Adding a connector (about 100 lines)</h3>
+<pre>class MyConnector(Connector):
+    type = "mydb"; dialect = "mysql"           # SQLGlot dialect name
+    capabilities = Capabilities(sandbox_validation=True,
+                                read_only_enforced="how this is enforced")
+    def test(self) -> dict: ...                 # harmless connectivity check
+    def discover(self) -> SchemaSnapshot: ...   # tables, columns, views + view SQL
+    def fetch_rows(self, table, limit): ...     # (columns, rows, truncated) — bounded, read-only
+
+# register in connectors/__init__.py:  "mydb": ("mydb", "MyConnector", ["host", "database"])
+# and list its accepted parameters in ALLOWED_PARAMS["mydb"]</pre>
+
+<!-- =============================== 11 TESTING =============================== -->
+<h2>11&nbsp;&nbsp;Testing and verification</h2>
+<div class="kpi">
+  <div><b>98</b><span>pytest tests (3 need a live Postgres) + 5 frontend unit tests</span></div>
+  <div><b>2</b><span>full browser walkthroughs (desktop-light, phone-dark)</span></div>
+  <div><b>4/4</b><span>scenarios match ground truth on SQLite and PostgreSQL</span></div>
+  <div><b>0</b><span>console / network errors in the browser run</span></div>
+</div>
+<table>
+<tr><th style="width:26%">Test area</th><th>What is asserted</th></tr>
+<tr><td>Schema differences</td><td>All change kinds; type-change classification; view-SQL formatting noise ignored; stable signature</td></tr>
+<tr><td>SQL parsing</td><td>ALTER/DROP/DELETE/UPDATE/CTE/CREATE VIEW handling; parse errors; read-only SELECT guard</td></tr>
+<tr><td>Lineage</td><td>Column-level precision (an unrelated column impacts nothing); cascade on object change; unparsable/missing views mark lineage incomplete</td></tr>
+<tr><td>Profiling &amp; reconciliation</td><td>Null/distinct/sum/max; duplicate keys; refusal on non-unique key; missing/new/changed counts and examples</td></tr>
+<tr><td>Severity</td><td>Every rule boundary and escalation cap</td></tr>
+<tr><td>Engine</td><td>Four scenarios; determinism; failed statements reported; source never modified; sandbox cannot read files; sampling and missing-asset disclosures; duplicate keys</td></tr>
+<tr><td>Connectors</td><td>SQLite/DuckDB/CSV/Parquet for real; read-only enforcement; path traversal; Postgres engine options; BigQuery/Snowflake via fakes; live Postgres suite when available</td></tr>
+<tr><td>Security &amp; API</td><td>Redaction, encryption round-trip, SSRF cases, demo-mode blocks, report exports, XSS escaping, unsafe metric rejection, baseline capture/compare, secrets not returned</td></tr>
+<tr><td>Jobs, auth, limits</td><td>Job lifecycle, failure reporting, cancel and deadline; bearer-token 401/200; body-size limit and request id; non-positive sample limit rejected; history filter/search/paging/delete/pruning</td></tr>
+<tr><td>Store, CLI, packaging</td><td>Migration of an old database to the current schema (WAL on); CLI exit codes 0/1/2, report files, migration folders, refusal of an open non-local bind; packaged seed SQL identical to the Docker copy; UI path override; the UI and CLI served from a non-editable install in a fresh virtualenv</td></tr>
+<tr><td>Frontend unit (Vitest)</td><td>Connection-URL parsing and schema-based starter changes</td></tr>
+<tr><td>Browser (Playwright)</td><td>Every page, result tabs, custom analysis, report downloads, baseline capture/compare, history search, the sample-database flow (launch, test, save, browse, preview, analyze via Ctrl+Enter), the token screen, console/network error capture</td></tr>
+</table>
+<h3>Verification status — plainly</h3>
+<table>
+<tr><th style="width:38%">Area</th><th style="width:20%">Status</th><th>Notes</th></tr>
+<tr><td>Engine, SQLite, DuckDB, CSV/Parquet, API, reports, security helpers</td><td><span class="pill p-ok">Verified</span></td><td>Automated tests on real databases/files</td></tr>
+<tr><td>PostgreSQL connector and seed SQL</td><td><span class="pill p-ok">Verified</span></td><td>Real PostgreSQL 16.2 (embedded via pgserver, not Docker)</td></tr>
+<tr><td>Frontend, including the UI connection flow and the token screen</td><td><span class="pill p-ok">Verified</span></td><td>Headless Chromium on Windows (desktop-light and phone-dark); screenshots inspected; no console or network errors</td></tr>
+<tr><td><code>missync analyze</code> CLI, jobs, auth, store migration</td><td><span class="pill p-ok">Verified</span></td><td>Automated tests plus manual runs (exit codes, report files, installed package)</td></tr>
+<tr><td>GitHub workflows (<code>.github/</code>) and <code>action.yml</code></td><td><span class="pill p-med">Never run</span></td><td>Valid YAML, but not yet executed on GitHub; expect small fixes on the first run</td></tr>
+<tr><td><code>install.sh</code> (macOS/Linux)</td><td><span class="pill p-med">Not run</span></td><td>Written for parity with <code>start.ps1</code>; developed on Windows</td></tr>
+<tr><td><code>docker-compose.yml</code>, <code>Dockerfile</code></td><td><span class="pill p-med">Not run</span></td><td>Docker unavailable in the build environment; the CI workflow builds and smoke-tests the image. The UI-not-served problem in non-editable installs was found by review and fixed, and verified with a pip install in a fresh virtualenv rather than in Docker</td></tr>
+<tr><td>BigQuery, Snowflake</td><td><span class="pill p-med">Not run live</span></td><td>No accounts; fake client tests only</td></tr>
+<tr><td>Large-data performance</td><td><span class="pill p-med">Not measured</span></td><td>Tested at thousands of rows; sampling cap is 200,000 rows per table by default</td></tr>
+<tr><td>Real-browser interaction beyond the scripted flows (keyboard-only, screen readers)</td><td><span class="pill p-med">Not tested</span></td><td>Radix primitives help, but no formal accessibility audit</td></tr>
+</table>
+
+<!-- =============================== 12 RUN =============================== -->
+<h2 class="chapter">12&nbsp;&nbsp;Running, configuring and extending</h2>
+<h3>12.1&nbsp; Run it</h3>
+<p>Requires Python 3.11+ and Node 18+. The shortest path, from the repository root:</p>
+<pre>.\start.ps1        # Windows PowerShell
+./install.sh       # macOS / Linux
+# then open http://localhost:8000</pre>
+<p>Both scripts do the one-time setup (virtualenv, PostgreSQL driver, embedded sample database package, built UI) and start Missync in <b>self-hosted</b> mode so connections can be added in the UI. If a virtualenv already exists, run <code>pip install -e "backend[postgres,sample]"</code> once. Manual steps and the locked public-demo variant:</p>
+<pre># Windows PowerShell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e "backend[dev]"
+cd frontend; npm install; npm run build; cd ..
+python -m missync                      # UI + API at http://localhost:8000 (same as: missync serve)
+
+# macOS / Linux / Git Bash
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e "backend[dev]"
+(cd frontend &amp;&amp; npm install &amp;&amp; npm run build)
+python -m missync --port 8000 --data-dir ./data</pre>
+<div class="callout warn"><b class="t">Shell pitfalls</b><code>. .venv/bin/activate</code> does not exist on Windows (use <code>Scripts</code>); <code>VAR=value cmd</code> is Bash-only; <code>&amp;&amp;</code> fails in Windows PowerShell 5.1. <code>python -m missync</code> avoids all three.</div>
+<p>Development: <code>npm run dev</code> in <code>frontend/</code> (port 5173, proxies <code>/api</code> to 8000).</p>
+<h3>12.1a&nbsp; Command line and CI</h3>
+<pre>missync analyze --sql change.sql --postgres-url "$STAGING_URL" --fail-on high
+missync analyze --dir migrations/pending --sqlite ./app.db --format html --output report.html
+missync analyze --connection "Staging" --sql change.sql   # a connection saved in the web app
+missync analyze --demo --sql change.sql                   # try it on the bundled database</pre>
+<p>Exit code <code>0</code> means no finding at or above <code>--fail-on</code> (default <code>high</code>), <code>1</code> means there is one, <code>2</code> is a usage or runtime error. Set <code>MISSYNC_POSTGRES_URL</code> instead of passing the URL on the command line so the password stays out of process lists. The repository root contains a composite GitHub Action (<code>action.yml</code>) that runs the same command, writes the summary to the job summary and uploads the HTML report; see <code>docs/CI.md</code>. The action and workflows have not yet been run on GitHub.</p>
+<h3>12.2&nbsp; Self-hosted with PostgreSQL sample data</h3>
+<pre>cp .env.example .env
+docker compose up --build       # Missync :8000, sample Postgres 127.0.0.1:5433</pre>
+<p>In <b>Connections</b>: host <code>postgres</code>, database <code>shop</code>, user <code>missync_ro</code>, password <code>missync_ro_dev_only</code>. The container binds <code>0.0.0.0</code> but the compose file publishes the port on <code>127.0.0.1</code> only and sets <code>MISSYNC_ALLOW_INSECURE_BIND</code> for that reason; if you publish it elsewhere, set <code>MISSYNC_API_TOKEN</code> and remove that line. The image has a health check on <code>/api/ready</code>.</p>
+<h3>12.3&nbsp; Configuration (environment variables)</h3>
+<table>
+<tr><th style="width:36%">Variable</th><th>Meaning</th></tr>
+<tr><td><code>MISSYNC_MODE</code></td><td><code>demo</code> (bundled data only) or <code>self-hosted</code></td></tr>
+<tr><td><code>MISSYNC_DATA_DIR</code></td><td>Metadata DB, demo data, generated secret key</td></tr>
+<tr><td><code>MISSYNC_SECRET_KEY</code></td><td>Fernet key for stored secrets (generated if empty)</td></tr>
+<tr><td><code>MISSYNC_ALLOW_LOCAL_PATHS</code></td><td>Allow file sources outside the data dir (default off)</td></tr>
+<tr><td><code>MISSYNC_ALLOWED_HOSTS</code> / <code>MISSYNC_ALLOW_PRIVATE_HOSTS</code></td><td>Host allowlist; block private/loopback ranges</td></tr>
+<tr><td><code>MISSYNC_STATEMENT_TIMEOUT_S</code>, <code>MISSYNC_SAMPLE_LIMIT</code></td><td>Timeouts and per-table sample cap</td></tr>
+<tr><td><code>MISSYNC_API_TOKEN</code></td><td>Require <code>Authorization: Bearer &lt;token&gt;</code> on every API call (except health/ready); required to listen on a non-local address in self-hosted mode</td></tr>
+<tr><td><code>MISSYNC_ALLOW_INSECURE_BIND</code></td><td>Permit a non-local bind without a token (only behind an authenticating proxy or a loopback-published port)</td></tr>
+<tr><td><code>MISSYNC_MAX_CONCURRENT_ANALYSES</code>, <code>MISSYNC_ANALYSIS_DEADLINE_S</code></td><td>Worker pool size (default 2) and overall time limit per analysis (default 600 s)</td></tr>
+<tr><td><code>MISSYNC_HISTORY_LIMIT</code>, <code>MISSYNC_MAX_BODY_BYTES</code></td><td>Analyses kept (default 500); request body cap (default 2 MB)</td></tr>
+<tr><td><code>MISSYNC_FRONTEND_DIST</code></td><td>Serve the built UI from this folder (default: the copy bundled in the package, then <code>frontend/dist</code>)</td></tr>
+</table>
+<h3>12.4&nbsp; Tests</h3>
+<pre>cd backend &amp;&amp; pytest                                     # 95 tests (+3 live below)
+MISSYNC_TEST_PG_PORT=5433 pytest tests/test_postgres_live.py   # +3 live
+cd frontend &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; npm run build   # types, 5 unit tests, bundle
+cd frontend &amp;&amp; E2E_CONNECT=1 npm run e2e                  # Playwright walkthrough incl. sample-database flow
+                                                          # (self-hosted server on :8000)</pre>
+<p>Operations notes: back up the data directory <b>including</b> <code>.secret_key</code> (stored connection secrets cannot be decrypted without it); the metadata database upgrades itself at startup; <code>/api/health</code> is a liveness probe and <code>/api/ready</code> checks the store and data directory.</p>
+<h3>12.5&nbsp; Repository map</h3>
+<pre>Missync/
+├─ backend/missync/
+│  ├─ api/app.py · jobs.py  routes, token + mode guard, background jobs, static UI
+│  ├─ cli.py                missync serve | analyze
+│  ├─ analysis/             sql_parser · schema_diff · lineage · sandbox · profiling
+│  │                        reconcile · severity · engine · baselines
+│  ├─ connectors/           base · sqlite · duckdb_conn · postgres · bigquery · snowflake
+│  ├─ reports/export.py     JSON + HTML
+│  ├─ store/db.py           SQLite metadata store
+│  ├─ demo/                 seed.py (synthetic data) · scenarios.py · sample_pg.py (embedded PostgreSQL)
+│  ├─ models.py  config.py  security.py
+│  └─ tests/                98 tests
+├─ frontend/src/            App · pages/ · components/ (Result, ImpactGraph, ui) · api.ts
+├─ docker/postgres-init.sql  docker-compose.yml  Dockerfile  .env.example
+├─ start.ps1 · install.sh · scripts/build_release.py · action.yml · .github/
+└─ docs/                    ARCHITECTURE.md · CONNECTORS.md · CI.md · handbook/
+   LICENSE · SECURITY.md · CONTRIBUTING.md · CHANGELOG.md</pre>
+<h3>12.6&nbsp; Typical extensions</h3>
+<ul>
+<li><b>New rule</b>: add a pure function in <code>severity.py</code>, call it from <code>engine.py</code>, add a boundary test.</li>
+<li><b>New connector</b>: see chapter 10.</li>
+<li><b>New finding type</b>: produce a <code>Finding</code> in <code>_data_findings</code> or <code>_structure_findings</code> with kind, confidence reason and recommendation.</li>
+<li><b>Register real consumers</b>: assets are stored per connection (<code>depends_on</code> accepts <code>table</code> or <code>table.column</code>); a future import from dbt manifests or BI exports fits here.</li>
+</ul>
+
+<!-- =============================== 13 LIMITS =============================== -->
+<h2>13&nbsp;&nbsp;Limitations and roadmap</h2>
+<h3>Known limitations</h3>
+<ul>
+<li><b>Sandbox ≠ production engine.</b> DuckDB does not reproduce constraints, triggers, indexes, collations or engine-specific functions. Failures caused by those will not show up; differences may appear that production would not have.</li>
+<li><b>Sampling.</b> Tables over the cap are sampled (first N rows, not random); results are labelled medium confidence.</li>
+<li><b>Invisible consumers.</b> BI tools, notebooks, ad-hoc queries and anything not registered or not in view SQL are unknown.</li>
+<li><b>Static-only clouds.</b> BigQuery/Snowflake produce predictions without data measurements.</li>
+<li><b>Dialect coverage</b> depends on SQLGlot; unusual syntax may fail to parse and is reported, not guessed.</li>
+<li><b>One shared token, no accounts.</b> There are no users, roles or audit log; history and connections are shared by everyone with access. Not suitable as a multi-visitor public service without further isolation and rate limiting.</li>
+<li><b>Estimated row counts.</b> PostgreSQL discovery uses planner statistics (marked <code>~</code>); they can lag until the table is analyzed. The analysis itself counts the sandbox copy exactly.</li>
+<li><b>Baseline growth.</b> Row-count changes between dates may be legitimate growth.</li>
+</ul>
+<h3>Roadmap ideas</h3>
+<table>
+<tr><th style="width:34%">Idea</th><th>Value</th></tr>
+<tr><td>PR-comment and SARIF/Markdown output for <code>missync analyze</code></td><td>The CLI and exit-code gate exist; richer review-time output is next</td></tr>
+<tr><td>Import lineage/assets from dbt manifest, BI exports, OpenLineage</td><td>Fewer manual registrations; broader impact</td></tr>
+<tr><td>Query-log ingestion (Postgres <code>pg_stat_statements</code>, warehouse history)</td><td>Discover unregistered consumers</td></tr>
+<tr><td>Random / stratified sampling and per-table sample override</td><td>Higher confidence on big tables</td></tr>
+<tr><td>Authentication + roles</td><td>Safe team deployment</td></tr>
+<tr><td>Warehouse sandboxes using zero-copy clones (Snowflake, BigQuery tables snapshots)</td><td>Verified results on cloud sources</td></tr>
+<tr><td>Scheduled baselines with drift alerts</td><td>Light observability on top of the same engine</td></tr>
+</table>
+
+<!-- =============================== 14 GLOSSARY =============================== -->
+<h2>14&nbsp;&nbsp;Glossary and sources</h2>
+<h3>Glossary</h3>
+<table>
+<tr><th style="width:24%">Term</th><th>Meaning</th></tr>
+<tr><td>Baseline</td><td>The "before" state: a copy of sampled data in the <code>base</code> schema, or a stored schema + profile.</td></tr>
+<tr><td>Candidate</td><td>The "after" state: the <code>cand</code> schema after the proposed SQL was applied.</td></tr>
+<tr><td>Lineage</td><td>Which objects/columns are derived from which; here, parsed from view SQL.</td></tr>
+<tr><td>Asset</td><td>A registered downstream consumer (dashboard, export, ML features, app).</td></tr>
+<tr><td>Verified / predicted</td><td>Measured in the sandbox / inferred from SQL text.</td></tr>
+<tr><td>Reconciliation</td><td>Row-by-row comparison of baseline and candidate on a unique key.</td></tr>
+<tr><td>Profile</td><td>Row count, null rates, distincts, min/max/sum/avg per column, key duplicates.</td></tr>
+<tr><td>Narrowing / widening</td><td>A type change that can / cannot lose information.</td></tr>
+<tr><td>SSRF</td><td>Server-side request forgery: tricking the server into contacting internal addresses.</td></tr>
+<tr><td>CSP</td><td>Content-Security-Policy header limiting what a page may load or run.</td></tr>
+</table>
+
+<h3>Sources consulted (web research, October 2026)</h3>
+<p class="small">Search results were summaries; vendor claims (feature counts, pricing estimates) are unverified and labelled as such in chapter 3.</p>
+<ul class="small">
+<li>Datafold documentation and data-diff on PyPI — docs.datafold.com/data-diff, pypi.org/project/data-diff</li>
+<li>Recce on PyPI and The New Stack coverage — pypi.org/project/recce, thenewstack.io</li>
+<li>SQLMesh documentation (plans, breaking vs non-breaking, table_diff) — sqlmesh.readthedocs.io; Tobiko Data blog</li>
+<li>DataHub lineage impact analysis — datahubproject.io/docs/act-on-metadata/impact-analysis; Atlan impact analysis — atlan.com</li>
+<li>Monte Carlo vs Great Expectations vs Soda comparisons — modern-datatools.com, medium.com, g2.com (secondary sources)</li>
+<li>Bytebase SQL review and comparisons with Flyway/Liquibase — bytebase.com</li>
+<li>datacontract CLI (PyPI, Thoughtworks Radar), Tessera, Schema Guard (PyPI)</li>
+<li>Technical documentation: SQLGlot, DuckDB, FastAPI, React Flow, Playwright</li>
+</ul>
+
+<div class="callout ok"><b class="t">End of handbook</b>The best next step is to run the demo, open the type-change scenario and read the Data &amp; metrics tab: the revenue metric says "+0.00%" while every row changed. That single screen is the reason this tool exists.</div>
+
+</body>
+</html>

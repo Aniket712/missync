@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_only
+          POSTGRES_DB: shop
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - run: pip install -e "backend[dev,postgres]"
+      - name: Seed the sample PostgreSQL
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          PGPASSWORD=ci_only psql -h localhost -U postgres -d shop -v ON_ERROR_STOP=1 -f docker/postgres-init.sql
+      - run: ruff check backend/missync backend/tests
+      - name: Tests (including live PostgreSQL)
+        working-directory: backend
+        env:
+          MISSYNC_TEST_PG_PORT: "5432"
+          MISSYNC_TEST_PG_PASSWORD: missync_ro_dev_only
+        run: pytest -q --cov=missync --cov-report=term-missing
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: pip install -e "backend[postgres,sample]"
+      - name: Build UI
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          npx playwright install --with-deps chromium
+      - name: Start server
+        env:
+          MISSYNC_MODE: self-hosted
+          MISSYNC_DATA_DIR: ${{ runner.temp }}/missync-data
+        run: |
+          missync serve --port 8000 > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf localhost:8000/api/ready && break; sleep 1; done
+      - name: Browser flow (sample database, test, save, browse, analyze)
+        working-directory: frontend
+        env:
+          E2E_CONNECT: "1"
+        run: mkdir -p ../shots && node e2e.mjs
+      - if: failure()
+        run: cat server.log
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t missync:ci .
+      - name: Smoke test the image (UI is served, health check passes)
+        run: |
+          docker run -d --name m -p 8000:8000 missync:ci
+          for i in $(seq 1 30); do curl -sf localhost:8000/api/ready && break; sleep 1; done
+          curl -sf localhost:8000/ | grep -q '<div id="root"'
+          docker logs m
