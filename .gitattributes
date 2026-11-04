@@ -1,0 +1,5 @@
+# Keep shell scripts and the Dockerfile on Unix line endings, even when cloned on Windows
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.mp4 binary
+*.pdf binary

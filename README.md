@@ -2,6 +2,8 @@
 
 **Catch data changes before they break what depends on them.**
 
+[![CI](https://github.com/Aniket712/missync/actions/workflows/ci.yml/badge.svg)](https://github.com/Aniket712/missync/actions/workflows/ci.yml) [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Missync analyzes a proposed SQL change, maps what depends on the objects it touches, applies the change to a throw-away copy of your data (never to the source), compares before/after, and produces an evidence-based report (JSON + HTML).
 
 - Static analysis (SQLGlot): added/removed/retyped columns, drops, unfiltered `UPDATE`/`DELETE`.
@@ -14,6 +16,10 @@ Missync analyzes a proposed SQL change, maps what depends on the objects it touc
 **Demo video (about 44 s):** [docs/media/missync-demo.mp4](docs/media/missync-demo.mp4): launch the sample database, run a column type change, and watch it ripple through 3 views and 4 downstream assets (blast radius, record check, impact graph).
 
 ## Quick start
+
+```bash
+git clone https://github.com/Aniket712/missync.git && cd missync
+```
 
 **Windows:** `.\start.ps1`  ·  **macOS/Linux:** `./install.sh`  ·  then open http://localhost:8000. Both do the one-time setup (virtualenv, PostgreSQL driver, built UI) and start Missync in self-hosted mode, so you can add connections from the UI.
 
