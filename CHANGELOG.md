@@ -8,7 +8,7 @@ All notable changes are listed here. The project follows [Semantic Versioning](h
 - **Visual results** (`frontend/src/components/viz.tsx`): headline tiles, a stacked severity bar and a **blast-radius flow** (your change → changed objects → dependent objects → downstream assets); schema changes as add/remove/modify chips; metric drift drawn against its tolerance band; a "where did the records go?" bar per table (unchanged / values changed / missing / new); before/after row-count bars; NULL-rate bars. Every chart has a text equivalent (`aria-label`) and never relies on colour alone; the original tables remain under "Show as table".
 - Impact graph legend (changed / impacted / related / unresolved link) and vertically centred columns.
 - Launch-sample-database progress steps, and a **Relaunch** button on a saved sample connection whose embedded server has stopped.
-- A 44-second demo video, `docs/media/missync-demo.mp4`, linked from the README. It follows a column type change through 3 dependent views to 4 downstream assets.
+- A 44-second demo video (`docs/media/missync-demo.mp4`, 7 MB), a README hero image and a 1280x640 social preview card (`docs/media/`). It follows a column type change through 3 dependent views to 4 downstream assets.
 - UI-driven PostgreSQL setup: guided connector picker, connection-URL paste, **Launch sample database** (embedded PostgreSQL, no Docker), stateless **Test connection**, friendly errors, row preview, schema search, re-test and confirmed delete.
 - Background analysis jobs (`/api/jobs`) with stage/percent progress and cancel; bounded concurrency and an overall deadline.
 - `missync analyze` CLI for CI gates (`--fail-on`, `--dir` migration folders, JSON/HTML reports) and a composite GitHub Action (`action.yml`).

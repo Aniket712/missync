@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Aniket712/missync@v0.1.0       # pin to a release tag once one exists
+      - uses: Aniket712/missync@main         # or pin to a release tag once you publish one
         with:
           sql: migrations/pending           # file or folder
           postgres-url: ${{ secrets.STAGING_READONLY_URL }}
