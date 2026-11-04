@@ -89,10 +89,10 @@ jobs:
         run: |
           missync serve --port 8000 > server.log 2>&1 &
           for i in $(seq 1 30); do curl -sf localhost:8000/api/ready && break; sleep 1; done
-      - name: Browser flow (sample database, test, save, browse, analyze)
+      # The embedded sample database (pgserver) listens on a Unix socket only on Linux/macOS, so the sample-database part
+      # (E2E_CONNECT=1) is run on Windows; here we cover every page, the scenarios, downloads and a custom analysis.
+      - name: Browser flow (pages, scenarios, downloads, custom analysis)
         working-directory: frontend
-        env:
-          E2E_CONNECT: "1"
         run: mkdir -p ../shots && node e2e.mjs
       - if: failure()
         run: cat server.log
@@ -104,7 +104,7 @@ jobs:
       - run: docker build -t missync:ci .
       - name: Smoke test the image (UI is served, health check passes)
         run: |
-          docker run -d --name m -p 8000:8000 missync:ci
+          docker run -d --name missync-ci -p 8000:8000 missync:ci
           for i in $(seq 1 30); do curl -sf localhost:8000/api/ready && break; sleep 1; done
           curl -sf localhost:8000/ | grep -q '<div id="root"'
-          docker logs m
+          docker logs missync-ci

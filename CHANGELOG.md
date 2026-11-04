@@ -26,6 +26,8 @@ All notable changes are listed here. The project follows [Semantic Versioning](h
 - Python dependencies have upper bounds (sqlglot 30.x, duckdb 2.x).
 
 ### Fixed
+- CI: the Docker smoke test used a one-character container name, which Docker rejects.
+- The **Launch sample database** button hung on Linux and macOS: the embedded PostgreSQL (`pgserver`) listens on a Unix socket there, not a TCP port. It now fails immediately with a clear message pointing to `docker compose` (the sample database remains a Windows feature); CI no longer runs the sample-database browser flow on Linux.
 - The bundled demo connection stored a relative path and showed "SQLite file not found" when started from another folder.
 - The Add-connection form defaulted to SQLite on a fresh page load instead of PostgreSQL.
 - Deleting a connection now also removes its analyses; an unreadable secret no longer breaks the connection list.

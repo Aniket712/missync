@@ -62,11 +62,21 @@ def status() -> dict[str, Any]:
         _import_pgserver()
     except SampleUnavailable as e:
         return {"available": False, "running": False, "message": str(e)}
-    return {"available": True, "running": _server is not None, "params": _params(_server_port()) if _server is not None else None}
+    try:
+        params = _params(_server_port()) if _server is not None else None
+    except SampleUnavailable as e:
+        return {"available": False, "running": False, "message": str(e)}
+    return {"available": True, "running": _server is not None, "params": params}
 
 
 def _server_port() -> int:
-    return make_url(_server.get_uri()).port
+    port = make_url(_server.get_uri()).port
+    if port is None:
+        raise SampleUnavailable(
+            "The embedded sample database only listens on a Unix socket on this operating system (no TCP port), "
+            "so Missync cannot connect to it. Use `docker compose up` for the sample data instead (see the README)."
+        )
+    return port
 
 
 def start(data_dir: Path) -> dict[str, Any]:
@@ -79,17 +89,24 @@ def start(data_dir: Path) -> dict[str, Any]:
             pgdata.mkdir(parents=True, exist_ok=True)
             _server = pgserver.get_server(pgdata, cleanup_mode="stop")
         try:
+            _server_port()  # fail early (before seeding) if the server has no TCP port
             _seed(_server.get_uri())
         except SampleUnavailable:
+            stop_locked()
             raise
         except Exception as e:  # pragma: no cover - environment specific
             raise SampleUnavailable(f"Could not prepare the sample database: {type(e).__name__}") from e
         return {"available": True, "running": True, "params": _params(_server_port())}
 
 
-def stop() -> None:
+def stop_locked() -> None:
+    """Stop the embedded server; the caller holds `_lock`."""
     global _server
+    if _server is not None:
+        _server.cleanup()
+        _server = None
+
+
+def stop() -> None:
     with _lock:
-        if _server is not None:
-            _server.cleanup()
-            _server = None
+        stop_locked()

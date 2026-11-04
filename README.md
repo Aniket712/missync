@@ -79,6 +79,8 @@ The UI is served only after `npm run build`; without it the API still works at `
 
 The sample database uses trust authentication on 127.0.0.1 only, so any password works there; it is for demos, not for real data.
 
+**Platform note:** the one-click sample database works on Windows. On Linux and macOS the embedded PostgreSQL only offers a Unix socket, so the button reports that and you should use the Docker route below (`docker compose up`) for the same sample data.
+
 ## Reading the results
 
 Take the bundled **type-change** scenario on the sample PostgreSQL database: `ALTER TABLE orders ALTER COLUMN amount TYPE INTEGER;`, a one-line change that looks harmless. It runs only on a throw-away copy, then Missync compares before and after and follows the dependencies.
@@ -124,7 +126,8 @@ Optional connector deps: `pip install -e "backend[postgres,bigquery,snowflake,fi
 ```bash
 cd backend && pytest        # ~95 tests; 3 more run against a live PostgreSQL when MISSYNC_TEST_PG_PORT is set
 cd frontend && npm run typecheck && npm test && npm run build
-cd frontend && npx playwright install chromium && E2E_CONNECT=1 npm run e2e   # browser walkthrough incl. the sample-database flow (self-hosted server on :8000)
+cd frontend && npx playwright install chromium && npm run e2e                  # browser walkthrough (server on :8000)
+# add E2E_CONNECT=1 on Windows to include the sample-database flow (needs a self-hosted server with the `sample` extra)
 ```
 
 ## Status: what is and isn't verified
@@ -139,7 +142,7 @@ cd frontend && npx playwright install chromium && E2E_CONNECT=1 npm run e2e   # 
 | Installed (non-editable) package serves the UI and CLI | Checked in a fresh virtualenv on Windows |
 | `Dockerfile`, `docker-compose.yml` | **Not run** - Docker is not available where this was built (the CI workflow builds and smoke-tests the image) |
 | GitHub workflows (`.github/`) and `action.yml` | **Never executed** - written but not yet run on GitHub; expect to fix small issues on the first run |
-| macOS/Linux launcher (`install.sh`) | **Not run** |
+| macOS/Linux launcher (`install.sh`) | **Not run**. The first CI run showed the one-click sample database cannot work there (Unix socket only, see the platform note); use Docker Compose for the sample data |
 | BigQuery, Snowflake | Fake client/connection tests only; never run against live services (no accounts); static analysis only |
 
 Known limits: the sandbox is DuckDB (constraints, triggers, indexes and engine-specific semantics are not reproduced); big tables are sampled; unregistered consumers (BI tools, ad-hoc queries) are invisible; baseline-to-baseline row-count changes may be normal growth.
